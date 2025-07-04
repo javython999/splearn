@@ -2,6 +2,7 @@ plugins {
     java
     id("org.springframework.boot") version "3.5.3"
     id("io.spring.dependency-management") version "1.1.7"
+    id("com.github.spotbugs") version "6.2.1"
 }
 
 group = "com.errday"
@@ -37,4 +38,10 @@ dependencies {
 
 tasks.withType<Test> {
     useJUnitPlatform()
+}
+
+spotbugs {
+    toolVersion.set("4.8.3") // SpotBugs 버전
+    effort.set(com.github.spotbugs.snom.Effort.MAX)
+    reportLevel.set(com.github.spotbugs.snom.Confidence.LOW)
 }
