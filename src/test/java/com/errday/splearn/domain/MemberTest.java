@@ -3,6 +3,8 @@ package com.errday.splearn.domain;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import static com.errday.splearn.domain.MemberFixture.createMemberRequest;
+import static com.errday.splearn.domain.MemberFixture.createPasswordEncoder;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
@@ -14,23 +16,12 @@ class MemberTest {
 
     @BeforeEach
     void setUp() {
-        this.passwordEncoder = new PasswordEncoder() {
-            @Override
-            public String encode(String password) {
-                return password.toUpperCase();
-            }
+        this.passwordEncoder = createPasswordEncoder();
 
-            @Override
-            public boolean matches(String password, String passwordHash) {
-                return encode(password).equals(passwordHash);
-            }
-        };
-
-        String email = "test@test.com";
-        String nickname = "user";
-        String passwordHash = "secret";
-        member = Member.register(new MemberResisterRequest(email, nickname, passwordHash), passwordEncoder);
+        member = Member.register(createMemberRequest(), passwordEncoder);
     }
+
+
 
     @Test
     void registerMember() {
@@ -86,7 +77,7 @@ class MemberTest {
 
     @Test
     void changeNickname() {
-        assertThat(member.getNickname()).isEqualTo("user");
+        assertThat(member.getNickname()).isEqualTo("nickname");
 
         member.changeNickname("junit");
 
@@ -117,9 +108,9 @@ class MemberTest {
     @Test
     void invalidEmail() {
         assertThatThrownBy(() -> {
-            Member.register(new MemberResisterRequest("invalid Email", "user", "secrete"), passwordEncoder);
+            Member.register(createMemberRequest("invalid Email"), passwordEncoder);
         }).isInstanceOf(IllegalArgumentException.class);
 
-        Member.register(new MemberResisterRequest("test@test.com", "user", "secrete"), passwordEncoder);
+        Member.register(createMemberRequest(), passwordEncoder);
     }
 }
