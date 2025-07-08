@@ -3,7 +3,7 @@ package com.errday.splearn.domain;
 public class MemberFixture {
 
     public static MemberResisterRequest createMemberRequest(String email) {
-        return new MemberResisterRequest(email, "nickname", "secret");
+        return new MemberResisterRequest(email, "nickname", "supersecret");
     }
 
     public static MemberResisterRequest createMemberRequest() {
