@@ -48,10 +48,29 @@ dependencies {
     testImplementation("org.mockito:mockito-inline:5.2.0")
     testImplementation("com.tngtech.archunit:archunit-junit5:1.4.1")
 
+    spotbugsPlugins("com.github.spotbugs:spotbugs:4.8.3") // 버전은 맞게 조정
+    spotbugsPlugins("com.github.spotbugs:spotbugs:4.8.3")
+    spotbugsPlugins("com.github.spotbugs:spotbugs-ant:4.8.3") // HTML 리포트를 위해 필요
+
     mockitoAgent("net.bytebuddy:byte-buddy-agent:1.14.12")
 }
 
 tasks.withType<Test> {
     useJUnitPlatform()
     jvmArgs("-javaagent:${mockitoAgent.asPath}")
+}
+
+tasks.withType<com.github.spotbugs.snom.SpotBugsTask>().configureEach {
+    reports {
+        named("html") {
+            required.set(true)
+            outputLocation.set(file("$rootDir/reports/spotbugs/${name}.html"))
+        }
+        named("xml") {
+            required.set(false) // 필요 시 true로 변경
+        }
+    }
+}
+spotbugs {
+    excludeFilter.set(file("$rootDir/spotbugs-exclude-filter.xml"))
 }
