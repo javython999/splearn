@@ -1,6 +1,6 @@
-package com.errday.splearn.application.required;
+package com.errday.splearn.application.member.required;
 
-import com.errday.splearn.domain.Email;
+import com.errday.splearn.domain.shared.Email;
 
 /**
  * 이메일을 발송한다.

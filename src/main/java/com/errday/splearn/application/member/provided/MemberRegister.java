@@ -1,7 +1,7 @@
-package com.errday.splearn.application.provided;
+package com.errday.splearn.application.member.provided;
 
-import com.errday.splearn.domain.Member;
-import com.errday.splearn.domain.MemberResisterRequest;
+import com.errday.splearn.domain.member.Member;
+import com.errday.splearn.domain.member.MemberResisterRequest;
 import jakarta.validation.Valid;
 
 /**

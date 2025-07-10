@@ -1,7 +1,11 @@
-package com.errday.splearn.application.provided;
+package com.errday.splearn.application.member.provided;
 
 import com.errday.splearn.SplearnTestConfiguration;
 import com.errday.splearn.domain.*;
+import com.errday.splearn.domain.member.Member;
+import com.errday.splearn.domain.member.MemberFixture;
+import com.errday.splearn.domain.member.MemberResisterRequest;
+import com.errday.splearn.domain.member.MemberStatus;
 import jakarta.persistence.EntityManager;
 import jakarta.validation.ConstraintViolationException;
 import org.junit.jupiter.api.Test;

@@ -1,7 +1,7 @@
-package com.errday.splearn.application.required;
+package com.errday.splearn.application.member.required;
 
-import com.errday.splearn.domain.Email;
-import com.errday.splearn.domain.Member;
+import com.errday.splearn.domain.shared.Email;
+import com.errday.splearn.domain.member.Member;
 import org.springframework.data.repository.Repository;
 
 import java.util.Optional;

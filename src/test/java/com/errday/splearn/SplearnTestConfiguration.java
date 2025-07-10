@@ -1,8 +1,8 @@
 package com.errday.splearn;
 
-import com.errday.splearn.application.required.EmailSender;
-import com.errday.splearn.domain.MemberFixture;
-import com.errday.splearn.domain.PasswordEncoder;
+import com.errday.splearn.application.member.required.EmailSender;
+import com.errday.splearn.domain.member.MemberFixture;
+import com.errday.splearn.domain.member.PasswordEncoder;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
 

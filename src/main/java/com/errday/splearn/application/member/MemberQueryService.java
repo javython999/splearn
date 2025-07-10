@@ -1,8 +1,8 @@
-package com.errday.splearn.application;
+package com.errday.splearn.application.member;
 
-import com.errday.splearn.application.provided.MemberFinder;
-import com.errday.splearn.application.required.MemberRepository;
-import com.errday.splearn.domain.Member;
+import com.errday.splearn.application.member.provided.MemberFinder;
+import com.errday.splearn.application.member.required.MemberRepository;
+import com.errday.splearn.domain.member.Member;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

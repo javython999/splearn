@@ -1,4 +1,4 @@
-package com.errday.splearn.domain;
+package com.errday.splearn.domain.shared;
 
 import java.util.regex.Pattern;
 

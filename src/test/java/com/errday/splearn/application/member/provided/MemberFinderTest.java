@@ -1,8 +1,8 @@
-package com.errday.splearn.application.provided;
+package com.errday.splearn.application.member.provided;
 
 import com.errday.splearn.SplearnTestConfiguration;
-import com.errday.splearn.domain.Member;
-import com.errday.splearn.domain.MemberFixture;
+import com.errday.splearn.domain.member.Member;
+import com.errday.splearn.domain.member.MemberFixture;
 import jakarta.persistence.EntityManager;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;

@@ -1,18 +1,25 @@
-package com.errday.splearn.domain;
+package com.errday.splearn.domain.member;
 
+import com.errday.splearn.domain.AbstractEntity;
+import com.errday.splearn.domain.shared.Email;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.OneToOne;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import org.hibernate.annotations.NaturalId;
 
+import java.util.Objects;
+
 import static java.util.Objects.requireNonNull;
 import static org.springframework.util.Assert.state;
 
 @Entity
 @Getter
-@ToString(callSuper = true)
+@ToString(callSuper = true, exclude = "detail")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Member extends AbstractEntity {
 
@@ -25,6 +32,9 @@ public class Member extends AbstractEntity {
 
     private MemberStatus status;
 
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private MemberDetail detail;
+
     public static Member register(MemberResisterRequest createRequest, PasswordEncoder passwordEncoder) {
         Member member = new Member();
 
@@ -34,6 +44,8 @@ public class Member extends AbstractEntity {
 
         member.status = MemberStatus.PENDING;
 
+        member.detail = MemberDetail.create();
+
         return member;
     }
 
@@ -41,12 +53,14 @@ public class Member extends AbstractEntity {
         state(status == MemberStatus.PENDING, "Member is not PENDING.");
 
         this.status = MemberStatus.ACTIVE;
+        this.detail.activate();
     }
 
     public void deactivate() {
         state(status == MemberStatus.ACTIVE, "Member is not ACTIVE.");
 
         this.status = MemberStatus.DEACTIVATED;
+        this.detail.deactivate();
     }
 
     public boolean verifyPassword(String password, PasswordEncoder passwordEncoder) {
@@ -55,6 +69,11 @@ public class Member extends AbstractEntity {
 
     public void changeNickname(String nickname) {
         this.nickname = requireNonNull(nickname);
+    }
+
+    public void updateInfo(MemberInfoUpdateRequest updateRequest) {
+        this.nickname = Objects.requireNonNull(updateRequest.nickname());
+        this.detail.updateInfo(updateRequest);
     }
 
     public void changePassword(String password, PasswordEncoder passwordEncoder) {

@@ -1,6 +1,6 @@
 package com.errday.splearn.adapter.security;
 
-import com.errday.splearn.domain.PasswordEncoder;
+import com.errday.splearn.domain.member.PasswordEncoder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 

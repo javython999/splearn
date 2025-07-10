@@ -1,7 +1,7 @@
 package com.errday.splearn.adapter.integration;
 
-import com.errday.splearn.application.required.EmailSender;
-import com.errday.splearn.domain.Email;
+import com.errday.splearn.application.member.required.EmailSender;
+import com.errday.splearn.domain.shared.Email;
 import org.springframework.stereotype.Component;
 
 @Component

@@ -1,10 +1,14 @@
-package com.errday.splearn.application;
+package com.errday.splearn.application.member;
 
-import com.errday.splearn.application.provided.MemberFinder;
-import com.errday.splearn.application.provided.MemberRegister;
-import com.errday.splearn.application.required.EmailSender;
-import com.errday.splearn.application.required.MemberRepository;
+import com.errday.splearn.application.member.provided.MemberFinder;
+import com.errday.splearn.application.member.provided.MemberRegister;
+import com.errday.splearn.application.member.required.EmailSender;
+import com.errday.splearn.application.member.required.MemberRepository;
 import com.errday.splearn.domain.*;
+import com.errday.splearn.domain.member.Member;
+import com.errday.splearn.domain.member.MemberResisterRequest;
+import com.errday.splearn.domain.member.PasswordEncoder;
+import com.errday.splearn.domain.shared.Email;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

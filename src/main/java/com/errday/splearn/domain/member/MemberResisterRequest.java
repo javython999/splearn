@@ -1,4 +1,4 @@
-package com.errday.splearn.domain;
+package com.errday.splearn.domain.member;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Size;
