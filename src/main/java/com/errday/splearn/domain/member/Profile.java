@@ -1,17 +1,14 @@
 package com.errday.splearn.domain.member;
 
-import jakarta.persistence.Embeddable;
-
 import java.util.regex.Pattern;
 
-@Embeddable
 public record Profile(String address) {
 
     private static final Pattern PROFILE_ADDRESS_PATTERN =
             Pattern.compile("[a-z0-9]+");
 
     public Profile {
-        if (!PROFILE_ADDRESS_PATTERN.matcher(address).matches()) {
+        if (address == null || (!address.isEmpty() && !PROFILE_ADDRESS_PATTERN.matcher(address).matches())) {
             throw new IllegalArgumentException("Invalid profile pattern: " + address);
         }
 

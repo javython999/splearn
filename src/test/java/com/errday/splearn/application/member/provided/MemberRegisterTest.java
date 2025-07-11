@@ -1,11 +1,9 @@
 package com.errday.splearn.application.member.provided;
 
 import com.errday.splearn.SplearnTestConfiguration;
-import com.errday.splearn.domain.*;
-import com.errday.splearn.domain.member.Member;
-import com.errday.splearn.domain.member.MemberFixture;
-import com.errday.splearn.domain.member.MemberResisterRequest;
-import com.errday.splearn.domain.member.MemberStatus;
+import com.errday.splearn.domain.DuplicateEmailException;
+import com.errday.splearn.domain.DuplicateProfileException;
+import com.errday.splearn.domain.member.*;
 import jakarta.persistence.EntityManager;
 import jakarta.validation.ConstraintViolationException;
 import org.junit.jupiter.api.Test;
@@ -41,14 +39,79 @@ record MemberRegisterTest(MemberRegister memberRegister, EntityManager entityMan
 
     @Test
     void activate() {
-        Member member = memberRegister.register(MemberFixture.createMemberRequest());
-        entityManager.flush();
-        entityManager.clear();
+        Member member = registerMember();
 
         member = memberRegister.activate(member.getId());
 
         assertThat(member.getStatus()).isEqualTo(MemberStatus.ACTIVE);
+        assertThat(member.getDetail().getActivatedAt()).isNotNull();
+    }
 
+    @Test
+    void deactivate() {
+        Member member = registerMember();
+
+        memberRegister.activate(member.getId());
+        entityManager.flush();
+        entityManager.clear();
+
+        member = memberRegister.deactivate(member.getId());
+        
+        assertThat(member.getStatus()).isEqualTo(MemberStatus.DEACTIVATED);
+        assertThat(member.getDetail().getDeactivatedAt()).isNotNull();
+    }
+
+    @Test
+    void updateInfo() {
+        Member member = registerMember();
+
+        memberRegister.activate(member.getId());
+        entityManager.flush();
+        entityManager.clear();
+
+        member = memberRegister.updateInfo(member.getId(), new MemberInfoUpdateRequest("HongGillDong", "honghonghong", "자기소개"));
+
+        assertThat(member.getDetail().getProfile().address()).isEqualTo("honghonghong");
+    }
+
+    @Test
+    void updateInfoFail() {
+        Member member = registerMember();
+        memberRegister.activate(member.getId());
+        memberRegister.updateInfo(member.getId(), new MemberInfoUpdateRequest("HongGillDong", "honghonghong", "자기소개"));
+
+        Member member2 = registerMember("spring@test.com");
+        memberRegister.activate(member2.getId());
+        entityManager.flush();
+        entityManager.clear();
+
+        // member2는 기존의 member와 같은 프로필 주소를 사용할 수 없다
+        assertThatThrownBy(() -> memberRegister.updateInfo(member2.getId(), new MemberInfoUpdateRequest("KIMGILLDONG", "honghonghong", "자기소개")))
+                .isInstanceOf(DuplicateProfileException.class);
+
+        // 다른 프로필 주소로는 변경 가능
+        memberRegister.updateInfo(member2.getId(), new MemberInfoUpdateRequest("KIMGILLDONG", "kimkimkimkim", "자기소개"));
+
+        // 프로필 주소를 제거하는 것도 가능
+        memberRegister.updateInfo(member.getId(), new MemberInfoUpdateRequest("HongGillDong", "", "자기소개"));
+
+        // 프로필 주소 중복는 허용하지 않음
+        assertThatThrownBy(() -> memberRegister.updateInfo(member.getId(), new MemberInfoUpdateRequest("KIMGILLDONG", "kimkimkimkim", "자기소개")))
+                .isInstanceOf(DuplicateProfileException.class);
+    }
+
+    private Member registerMember() {
+        Member member = memberRegister.register(MemberFixture.createMemberRequest());
+        entityManager.flush();
+        entityManager.clear();
+        return member;
+    }
+
+    private Member registerMember(String email) {
+        Member member = memberRegister.register(MemberFixture.createMemberRequest(email));
+        entityManager.flush();
+        entityManager.clear();
+        return member;
     }
 
     @Test

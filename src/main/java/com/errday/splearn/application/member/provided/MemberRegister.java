@@ -1,6 +1,7 @@
 package com.errday.splearn.application.member.provided;
 
 import com.errday.splearn.domain.member.Member;
+import com.errday.splearn.domain.member.MemberInfoUpdateRequest;
 import com.errday.splearn.domain.member.MemberResisterRequest;
 import jakarta.validation.Valid;
 
@@ -11,4 +12,8 @@ public interface MemberRegister {
     Member register(@Valid MemberResisterRequest resisterRequest);
 
     Member activate(Long memberId);
+
+    Member deactivate(Long memberId);
+
+    Member updateInfo(Long memberId, @Valid MemberInfoUpdateRequest updateRequest);
 }

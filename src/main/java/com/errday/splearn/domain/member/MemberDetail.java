@@ -1,6 +1,7 @@
 package com.errday.splearn.domain.member;
 
 import com.errday.splearn.domain.AbstractEntity;
+import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
@@ -22,7 +23,6 @@ import static org.springframework.util.Assert.state;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class MemberDetail extends AbstractEntity {
 
-   @Embedded
    private Profile profile;
 
    private String introduction;
