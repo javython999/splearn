@@ -1,4 +1,4 @@
-package com.errday.splearn.domain;
+package com.errday.splearn.domain.member;
 
 public class DuplicateEmailException extends RuntimeException {
 

@@ -1,8 +1,8 @@
 package com.errday.splearn.application.member.provided;
 
 import com.errday.splearn.SplearnTestConfiguration;
-import com.errday.splearn.domain.DuplicateEmailException;
-import com.errday.splearn.domain.DuplicateProfileException;
+import com.errday.splearn.domain.member.DuplicateEmailException;
+import com.errday.splearn.domain.member.DuplicateProfileException;
 import com.errday.splearn.domain.member.*;
 import jakarta.persistence.EntityManager;
 import jakarta.validation.ConstraintViolationException;
