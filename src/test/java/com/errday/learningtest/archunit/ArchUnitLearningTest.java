@@ -1,4 +1,4 @@
-package learningtest.archunit;
+package com.errday.learningtest.archunit;
 
 import com.tngtech.archunit.core.domain.JavaClasses;
 import com.tngtech.archunit.junit.AnalyzeClasses;
@@ -7,11 +7,10 @@ import com.tngtech.archunit.junit.ArchTest;
 import static com.tngtech.archunit.lang.syntax.ArchRuleDefinition.classes;
 import static com.tngtech.archunit.lang.syntax.ArchRuleDefinition.noClasses;
 
-@AnalyzeClasses(packages = "learningtest.archunit")
+@AnalyzeClasses(packages = "com.errday.learningtest.archunit")
 public class ArchUnitLearningTest {
-
     /**
-     * Application 클래스를 의존하는 클래스는 application, adpater에만 존재해야 한다.
+     * Application 클래스를 의존하는 클래스는 application, adapter에만 존재해야 한다.
      */
     @ArchTest
     void application(JavaClasses classes) {
@@ -21,35 +20,22 @@ public class ArchUnitLearningTest {
     }
 
     /**
-     * application 클래스는 adapter의 클래스를 의존하면 안된다.
+     * Application 클래스는 adapter의 클래스를 의존하면 안 된다
      */
     @ArchTest
     void adapter(JavaClasses classes) {
         noClasses().that().resideInAPackage("..application..")
-                .should().dependOnClassesThat().resideInAnyPackage("..adapter..")
+                .should().dependOnClassesThat().resideInAPackage("..adapter..")
                 .check(classes);
     }
 
     /**
-     * domain 클래스는 application, adapter의 클래스를 의존하면 안된다.
+     * Domain의 클래스는 domain, java
      */
     @ArchTest
     void domain(JavaClasses classes) {
-        noClasses().that().resideInAPackage("..domain..")
-                .should().dependOnClassesThat().resideInAnyPackage("..application..", "..adapter..")
-                .check(classes);
-    }
-
-    /**
-     * domain 클래스는 domain, java 클래스만 의존한다.
-     */
-    @ArchTest
-    void domain2(JavaClasses classes) {
         classes().that().resideInAPackage("..domain..")
                 .should().onlyDependOnClassesThat().resideInAnyPackage("..domain..", "java..")
                 .check(classes);
     }
-
-
-
 }

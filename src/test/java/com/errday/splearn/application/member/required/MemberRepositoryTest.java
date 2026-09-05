@@ -25,7 +25,7 @@ class MemberRepositoryTest {
 
     @Test
     void createMember() {
-        Member member = Member.register(createMemberRequest(), createPasswordEncoder());
+        Member member = Member.register(createMemberRequest().toInfo(), createPasswordEncoder());
 
         assertThat(member.getId()).isNull();
 
@@ -44,10 +44,10 @@ class MemberRepositoryTest {
 
     @Test
     void duplicateEmailFail() {
-        Member member = Member.register(createMemberRequest(), createPasswordEncoder());
+        Member member = Member.register(createMemberRequest().toInfo(), createPasswordEncoder());
         memberRepository.save(member);
 
-        Member member2 = Member.register(createMemberRequest(), createPasswordEncoder());
+        Member member2 = Member.register(createMemberRequest().toInfo(), createPasswordEncoder());
         assertThatThrownBy(() -> memberRepository.save(member2))
                 .isInstanceOf(DataIntegrityViolationException.class);
         memberRepository.save(member2);

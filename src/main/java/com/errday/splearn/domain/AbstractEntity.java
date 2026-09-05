@@ -1,6 +1,5 @@
 package com.errday.splearn.domain;
 
-import jakarta.annotation.Nullable;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -8,6 +7,7 @@ import jakarta.persistence.MappedSuperclass;
 import lombok.Getter;
 import lombok.ToString;
 import org.hibernate.proxy.HibernateProxy;
+import org.springframework.lang.Nullable;
 
 import java.util.Objects;
 
@@ -15,8 +15,8 @@ import java.util.Objects;
 @ToString
 public abstract class AbstractEntity {
     @Id
-    @Getter(onMethod_ = {@Nullable})
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Getter(onMethod_ = {@Nullable})
     private Long id;
 
     @Override

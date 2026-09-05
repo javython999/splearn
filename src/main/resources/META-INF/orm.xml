@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<entity-mappings
-        xmlns="http://www.hibernate.org/xsd/orm/mapping"
-        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:schemaLocation="http://www.hibernate.org/xsd/orm/mapping
-                            http://hibernate.org/xsd/orm/mapping/mapping-3.1.0.xsd">
+<entity-mappings xmlns="http://www.hibernate.org/xsd/orm/mapping"
+                 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                 xsi:schemaLocation="http://www.hibernate.org/xsd/orm/mapping
+                                     https://hibernate.org/xsd/orm/mapping/mapping-3.1.0.xsd">
     <access>FIELD</access>
 
     <mapped-superclass class="com.errday.splearn.domain.AbstractEntity">
@@ -26,10 +25,10 @@
         </table>
         <attributes>
             <basic name="nickname">
-                <column name="nickname" nullable="false" length="200"/>
+                <column name="nickname" nullable="false" length="100"/>
             </basic>
             <basic name="passwordHash">
-                <column name="password_hash" nullable="false" length="100"/>
+                <column name="password_hash" nullable="false" length="200"/>
             </basic>
             <basic name="status">
                 <column name="status" nullable="false" length="50"/>
@@ -37,21 +36,20 @@
             </basic>
             <one-to-one name="detail" fetch="LAZY">
                 <cascade>
-                    <cascade-all/>
+                    <cascade-all />
                 </cascade>
             </one-to-one>
-            <embedded name="email"/>
+            <embedded name="email">
+            </embedded>
         </attributes>
     </entity>
 
     <entity class="com.errday.splearn.domain.member.MemberDetail">
-
         <table name="member_detail">
             <unique-constraint name="UK_MEMBER_DETAIL_PROFILE_ADDRESS">
                 <column-name>profile_address</column-name>
             </unique-constraint>
         </table>
-
         <attributes>
             <basic name="introduction">
                 <column name="introduction" column-definition="TEXT"/>
@@ -69,18 +67,18 @@
         </attributes>
     </entity>
 
-    <embeddable class="com.errday.splearn.domain.shared.Email">
-        <attributes>
-            <basic name="address">
-                <column name="email_address" nullable="false" length="200"/>
-            </basic>
-        </attributes>
-    </embeddable>
-
     <embeddable class="com.errday.splearn.domain.member.Profile">
         <attributes>
             <basic name="address">
                 <column name="profile_address" length="20"/>
+            </basic>
+        </attributes>
+    </embeddable>
+
+    <embeddable class="com.errday.splearn.domain.shared.Email">
+        <attributes>
+            <basic name="address">
+                <column name="email_address" nullable="false" length="150"/>
             </basic>
         </attributes>
     </embeddable>

@@ -1,6 +1,6 @@
-package com;
+package com.errday.splearn;
 
-import com.errday.splearn.domain.member.MemberResisterRequest;
+import com.errday.splearn.application.member.provided.MemberRegisterRequest;
 import org.assertj.core.api.AssertProvider;
 import org.springframework.test.json.JsonPathValueAssert;
 
@@ -9,12 +9,11 @@ import java.util.function.Consumer;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class AssertThatUtils {
-
     public static Consumer<AssertProvider<JsonPathValueAssert>> notNull() {
         return value -> assertThat(value).isNotNull();
     }
 
-    public static Consumer<AssertProvider<JsonPathValueAssert>> equalsTo(MemberResisterRequest request) {
+    public static Consumer<AssertProvider<JsonPathValueAssert>> equalsTo(MemberRegisterRequest request) {
         return value -> assertThat(value).isEqualTo(request.email());
     }
 }

@@ -1,14 +1,15 @@
 package com.errday.splearn.domain.member;
 
+import com.errday.splearn.application.member.provided.MemberRegisterRequest;
 import org.springframework.test.util.ReflectionTestUtils;
 
 public class MemberFixture {
 
-    public static MemberResisterRequest createMemberRequest(String email) {
-        return new MemberResisterRequest(email, "nickname", "supersecret");
+    public static MemberRegisterRequest createMemberRequest(String email) {
+        return new MemberRegisterRequest(email, "nickname", "supersecret");
     }
 
-    public static MemberResisterRequest createMemberRequest() {
+    public static MemberRegisterRequest createMemberRequest() {
         return createMemberRequest("test@test.com");
     }
 
@@ -27,16 +28,16 @@ public class MemberFixture {
     }
 
     public static Member createMember() {
-        return  Member.register(createMemberRequest(), createPasswordEncoder());
+        return  Member.register(createMemberRequest().toInfo(), createPasswordEncoder());
     }
 
     public static Member createMember(Long id) {
-        Member member = Member.register(createMemberRequest(), createPasswordEncoder());
+        Member member = Member.register(createMemberRequest().toInfo(), createPasswordEncoder());
         ReflectionTestUtils.setField(member, "id", id);
         return member;
     }
 
     public static Member createMember(String email) {
-        return Member.register(createMemberRequest(email), createPasswordEncoder());
+        return Member.register(createMemberRequest(email).toInfo(), createPasswordEncoder());
     }
 }

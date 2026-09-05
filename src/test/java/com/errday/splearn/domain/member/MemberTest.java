@@ -1,11 +1,11 @@
 package com.errday.splearn.domain.member;
 
+import com.errday.splearn.application.member.provided.MemberInfoUpdateRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static com.errday.splearn.domain.member.MemberFixture.createMemberRequest;
 import static com.errday.splearn.domain.member.MemberFixture.createPasswordEncoder;
-import static org.assertj.core.api.Assertions.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
@@ -19,7 +19,7 @@ class MemberTest {
     void setUp() {
         this.passwordEncoder = createPasswordEncoder();
 
-        member = Member.register(createMemberRequest(), passwordEncoder);
+        member = Member.register(createMemberRequest().toInfo(), passwordEncoder);
     }
 
 
@@ -105,10 +105,10 @@ class MemberTest {
     @Test
     void invalidEmail() {
         assertThatThrownBy(() -> {
-            Member.register(createMemberRequest("invalid Email"), passwordEncoder);
+            Member.register(createMemberRequest("invalid Email").toInfo(), passwordEncoder);
         }).isInstanceOf(IllegalArgumentException.class);
 
-        Member.register(createMemberRequest(), passwordEncoder);
+        Member.register(createMemberRequest().toInfo(), passwordEncoder);
     }
 
     @Test
@@ -116,7 +116,7 @@ class MemberTest {
         member.activate();
 
         var request = new MemberInfoUpdateRequest("HongGillDong", "honghonghong", "자기소개");
-        member.updateInfo(request);
+        member.updateInfo(request.toInfo());
 
         assertThat(member.getNickname()).isEqualTo(request.nickname());
         assertThat(member.getDetail().getProfile().address()).isEqualTo(request.profileAddress());
@@ -127,7 +127,7 @@ class MemberTest {
     void updateInfoFail() {
         assertThatThrownBy(() -> {
             var request = new MemberInfoUpdateRequest("HongGillDong", "honghonghong", "자기소개");
-            member.updateInfo(request);
+            member.updateInfo(request.toInfo());
         }).isInstanceOf(IllegalStateException.class);
     }
 }

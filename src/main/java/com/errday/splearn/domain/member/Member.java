@@ -19,7 +19,6 @@ import static org.springframework.util.Assert.state;
 @ToString(callSuper = true, exclude = "detail")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Member extends AbstractEntity {
-
     @NaturalId
     private Email email;
 
@@ -31,7 +30,7 @@ public class Member extends AbstractEntity {
 
     private MemberDetail detail;
 
-    public static Member register(MemberResisterRequest createRequest, PasswordEncoder passwordEncoder) {
+    public static Member register(MemberRegisterInfo createRequest, PasswordEncoder passwordEncoder) {
         Member member = new Member();
 
         member.email = new Email(createRequest.email());
@@ -46,14 +45,14 @@ public class Member extends AbstractEntity {
     }
 
     public void activate() {
-        state(status == MemberStatus.PENDING, "Member is not PENDING.");
+        state(status == MemberStatus.PENDING, "PENDING 상태가 아닙니다");
 
         this.status = MemberStatus.ACTIVE;
         this.detail.activate();
     }
 
     public void deactivate() {
-        state(status == MemberStatus.ACTIVE, "Member is not ACTIVE.");
+        state(status == MemberStatus.ACTIVE, "ACTIVE 상태가 아닙니다");
 
         this.status = MemberStatus.DEACTIVATED;
         this.detail.deactivate();
@@ -63,10 +62,11 @@ public class Member extends AbstractEntity {
         return passwordEncoder.matches(password, this.passwordHash);
     }
 
-    public void updateInfo(MemberInfoUpdateRequest updateRequest) {
-        state(status == MemberStatus.ACTIVE, "정보수정은 등록완료 상태일때만 가능합니다.");
+    public void updateInfo(MemberInfoUpdateInfo updateRequest) {
+        state(getStatus() == MemberStatus.ACTIVE, "등록 완료 상태가 아니면 정보를 수정할 수 없습니다");
 
         this.nickname = Objects.requireNonNull(updateRequest.nickname());
+
         this.detail.updateInfo(updateRequest);
     }
 

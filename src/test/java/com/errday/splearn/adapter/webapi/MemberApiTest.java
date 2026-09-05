@@ -5,7 +5,7 @@ import com.errday.splearn.application.member.provided.MemberRegister;
 import com.errday.splearn.application.member.required.MemberRepository;
 import com.errday.splearn.domain.member.Member;
 import com.errday.splearn.domain.member.MemberFixture;
-import com.errday.splearn.domain.member.MemberResisterRequest;
+import com.errday.splearn.application.member.provided.MemberRegisterRequest;
 import com.errday.splearn.domain.member.MemberStatus;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -21,8 +21,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.UnsupportedEncodingException;
 
-import static com.AssertThatUtils.equalsTo;
-import static com.AssertThatUtils.notNull;
+import static com.errday.splearn.AssertThatUtils.equalsTo;
+import static com.errday.splearn.AssertThatUtils.notNull;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 
@@ -38,7 +38,7 @@ public class MemberApiTest {
 
     @Test
     void register() throws JsonProcessingException, UnsupportedEncodingException {
-        MemberResisterRequest request = MemberFixture.createMemberRequest();
+        MemberRegisterRequest request = MemberFixture.createMemberRequest();
         String requestJson = objectMapper.writeValueAsString(request);
 
         MvcTestResult result = mvcTester.post()
@@ -69,7 +69,7 @@ public class MemberApiTest {
     void duplicateFail() throws JsonProcessingException {
         memberRegister.register(MemberFixture.createMemberRequest());
 
-        MemberResisterRequest request = MemberFixture.createMemberRequest();
+        MemberRegisterRequest request = MemberFixture.createMemberRequest();
         String requestJson = objectMapper.writeValueAsString(request);
 
 

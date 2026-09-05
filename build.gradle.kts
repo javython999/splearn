@@ -1,8 +1,8 @@
 plugins {
     java
-    id("org.springframework.boot") version "3.5.3"
+    id("org.springframework.boot") version "3.5.13"
     id("io.spring.dependency-management") version "1.1.7"
-    id("com.github.spotbugs") version "6.2.1"
+    id("com.github.spotbugs") version "6.4.8"
 }
 
 group = "com.errday"
@@ -44,7 +44,7 @@ dependencies {
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
     testImplementation("org.junit-pioneer:junit-pioneer:2.3.0")
-    testImplementation("org.mockito:mockito-core:5.18.0")
+    testImplementation("org.mockito:mockito-core:5.23.0")
     testImplementation("org.mockito:mockito-inline:5.2.0")
     testImplementation("com.tngtech.archunit:archunit-junit5:1.4.1")
 

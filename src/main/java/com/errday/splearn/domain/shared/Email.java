@@ -3,13 +3,12 @@ package com.errday.splearn.domain.shared;
 import java.util.regex.Pattern;
 
 public record Email(String address) {
-
     private static final Pattern EMAIL_PATTERN =
-            Pattern.compile("^[a-zA-z0-9_+&*-]+(?:\\.[a-zA-z0-9_+&*-]+)*@(?:[a-zA-z0-9]+\\.)+[a-zA-z+]{2,7}$");
-
+            Pattern.compile("^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$");
+    
     public Email {
         if (!EMAIL_PATTERN.matcher(address).matches()) {
-            throw new IllegalArgumentException("Invalid email: " + address);
+            throw new IllegalArgumentException("이메일 형식이 바르지 않습니다: " + address);
         }
     }
 }

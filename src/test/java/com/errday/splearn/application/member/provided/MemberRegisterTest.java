@@ -92,12 +92,15 @@ record MemberRegisterTest(MemberRegister memberRegister, EntityManager entityMan
         // 다른 프로필 주소로는 변경 가능
         memberRegister.updateInfo(member2.getId(), new MemberInfoUpdateRequest("KIMGILLDONG", "kimkimkimkim", "자기소개"));
 
-        // 프로필 주소를 제거하는 것도 가능
-        memberRegister.updateInfo(member.getId(), new MemberInfoUpdateRequest("HongGillDong", "", "자기소개"));
 
         // 프로필 주소 중복는 허용하지 않음
         assertThatThrownBy(() -> memberRegister.updateInfo(member.getId(), new MemberInfoUpdateRequest("KIMGILLDONG", "kimkimkimkim", "자기소개")))
                 .isInstanceOf(DuplicateProfileException.class);
+
+        // 프로필 주소를 제거하는 것도 가능
+        memberRegister.updateInfo(member.getId(), new MemberInfoUpdateRequest("HongGillDong", "", "자기소개"));
+        memberRegister.updateInfo(member2.getId(), new MemberInfoUpdateRequest("HongGillDong", "", "자기소개"));
+        entityManager.flush();
     }
 
     private Member registerMember() {
@@ -116,12 +119,12 @@ record MemberRegisterTest(MemberRegister memberRegister, EntityManager entityMan
 
     @Test
     void memberRegisterRequestFail() {
-        checkValidation(new MemberResisterRequest("test@test.com", "user", "longSecret"));
-        checkValidation(new MemberResisterRequest("test@test.com", "intellij___________________", "longSecret"));
-        checkValidation(new MemberResisterRequest("testtest.com", "intellij", "longSecret"));
+        checkValidation(new MemberRegisterRequest("test@test.com", "user", "longSecret"));
+        checkValidation(new MemberRegisterRequest("test@test.com", "intellij___________________", "longSecret"));
+        checkValidation(new MemberRegisterRequest("testtest.com", "intellij", "longSecret"));
     }
 
-    private void checkValidation(MemberResisterRequest invalid) {
+    private void checkValidation(MemberRegisterRequest invalid) {
         assertThatThrownBy(() -> memberRegister.register(invalid))
             .isInstanceOf(ConstraintViolationException.class);
     }
