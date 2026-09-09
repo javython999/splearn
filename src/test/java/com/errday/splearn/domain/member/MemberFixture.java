@@ -31,6 +31,12 @@ public class MemberFixture {
         return  Member.register(createMemberRequest().toInfo(), createPasswordEncoder());
     }
 
+    public static Member createActiveMember() {
+        Member member = createMember();
+        member.activate();
+        return member;
+    }
+
     public static Member createMember(Long id) {
         Member member = Member.register(createMemberRequest().toInfo(), createPasswordEncoder());
         ReflectionTestUtils.setField(member, "id", id);
