@@ -25,9 +25,12 @@ class MemberAuthenticatorTest {
     @Test
     void login() {
         var registerRequest = MemberFixture.createMemberRequest();
-        memberRegister.register(registerRequest).activate();
-        var member = memberAuthenticator.login(new MemberLoginRequest(registerRequest.email(), registerRequest.password()));
-        assertThat(member).isNotNull();
+        var member = memberRegister.register(registerRequest);
+        member.activate();
+
+        var loggedInMember = memberAuthenticator.login(new MemberLoginRequest(registerRequest.email(), registerRequest.password()));
+
+        assertThat(loggedInMember).isEqualTo(member);
     }
 
     @Test

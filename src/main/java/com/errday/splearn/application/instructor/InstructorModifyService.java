@@ -1,5 +1,6 @@
 package com.errday.splearn.application.instructor;
 
+import com.errday.splearn.application.instructor.provided.DuplicateInstructorApplicationException;
 import com.errday.splearn.application.instructor.provided.InstructorApplication;
 import com.errday.splearn.application.instructor.provided.InstructorApplyRequest;
 import com.errday.splearn.application.instructor.provided.InstructorFinder;
@@ -26,6 +27,8 @@ public class InstructorModifyService implements InstructorApplication {
     public Instructor apply(InstructorApplyRequest request) {
         Member member = memberFinder.find(request.memberId());
 
+        checkDuplicateApplication(member);
+
         Instructor instructor = Instructor.apply(member);
 
         return instructorRepository.save(instructor);
@@ -43,6 +46,12 @@ public class InstructorModifyService implements InstructorApplication {
         Instructor instructor = instructorFinder.find(instructorId);
         instructor.reject();
         return instructorRepository.save(instructor);
+    }
+
+    private void checkDuplicateApplication(Member member) {
+        if (instructorRepository.findByMemberId(member.getId()).isPresent()) {
+            throw new DuplicateInstructorApplicationException("회원은 중복해서 강사 신청을 할 수 없습니다.");
+        }
     }
 }
 

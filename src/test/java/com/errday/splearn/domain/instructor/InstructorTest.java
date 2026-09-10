@@ -2,11 +2,10 @@ package com.errday.splearn.domain.instructor;
 
 import com.errday.splearn.domain.member.Member;
 import com.errday.splearn.domain.member.MemberFixture;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class InstructorTest {
 
@@ -40,9 +39,7 @@ class InstructorTest {
 
     @Test
     void approveFailed() {
-        Member member = MemberFixture.createActiveMember();
-        Instructor instructor = Instructor.apply(member);
-        instructor.approve();
+        Instructor instructor = InstructorFixture.createActiveInstructor();
 
         assertThatThrownBy(instructor::approve)
             .isInstanceOf(IllegalStateException.class);
@@ -50,8 +47,7 @@ class InstructorTest {
 
     @Test
     void reject() {
-        Member member = MemberFixture.createActiveMember();
-        Instructor instructor = Instructor.apply(member);
+        Instructor instructor = InstructorFixture.createInstructor();
 
         instructor.reject();
 
@@ -60,8 +56,7 @@ class InstructorTest {
 
     @Test
     void rejectFailed() {
-        Member member = MemberFixture.createActiveMember();
-        Instructor instructor = Instructor.apply(member);
+        Instructor instructor = InstructorFixture.createInstructor();
         instructor.reject();
 
         assertThatThrownBy(instructor::reject)
