@@ -3,14 +3,12 @@ package com.errday.splearn.application.instructor;
 import com.errday.splearn.application.instructor.provided.InstructorFinder;
 import com.errday.splearn.application.instructor.required.InstructorRepository;
 import com.errday.splearn.domain.instructor.Instructor;
-import jakarta.transaction.Transactional;
+import com.errday.splearn.support.stereotype.ApplicationService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
-@Service
-@Transactional
+@ApplicationService
 @RequiredArgsConstructor
 public class InstructorQueryService implements InstructorFinder {
 

@@ -7,17 +7,15 @@ import com.errday.splearn.domain.member.Member;
 import com.errday.splearn.domain.member.MemberFixture;
 import com.errday.splearn.application.member.provided.MemberRegisterRequest;
 import com.errday.splearn.domain.member.MemberStatus;
+import com.errday.splearn.support.stereotype.WebApiAdapterTest;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.MediaType;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.web.servlet.assertj.MockMvcTester;
 import org.springframework.test.web.servlet.assertj.MvcTestResult;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.io.UnsupportedEncodingException;
 
@@ -26,9 +24,7 @@ import static com.errday.splearn.AssertThatUtils.notNull;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 
-@SpringBootTest
-@AutoConfigureMockMvc
-@Transactional
+@WebApiAdapterTest
 @RequiredArgsConstructor
 public class MemberApiTest {
     final MockMvcTester  mvcTester;
@@ -38,7 +34,7 @@ public class MemberApiTest {
 
     @Test
     void register() throws JsonProcessingException, UnsupportedEncodingException {
-        MemberRegisterRequest request = MemberFixture.createMemberRequest();
+        MemberRegisterRequest request = MemberFixture.createMemberRegisterRequest();
         String requestJson = objectMapper.writeValueAsString(request);
 
         MvcTestResult result = mvcTester.post()
@@ -67,9 +63,10 @@ public class MemberApiTest {
 
     @Test
     void duplicateFail() throws JsonProcessingException {
-        memberRegister.register(MemberFixture.createMemberRequest());
+        MemberRegisterRequest request = MemberFixture.createMemberRegisterRequest();
 
-        MemberRegisterRequest request = MemberFixture.createMemberRequest();
+        memberRegister.register(request);
+
         String requestJson = objectMapper.writeValueAsString(request);
 
 

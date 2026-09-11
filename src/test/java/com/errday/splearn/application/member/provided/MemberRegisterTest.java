@@ -1,27 +1,19 @@
 package com.errday.splearn.application.member.provided;
 
-import com.errday.splearn.SplearnTestConfiguration;
-import com.errday.splearn.domain.member.DuplicateEmailException;
-import com.errday.splearn.domain.member.DuplicateProfileException;
 import com.errday.splearn.domain.member.*;
+import com.errday.splearn.support.stereotype.ApplicationServiceTest;
 import jakarta.persistence.EntityManager;
 import jakarta.validation.ConstraintViolationException;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.annotation.Import;
-import org.springframework.transaction.annotation.Transactional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-@SpringBootTest
-@Transactional
-@Import(SplearnTestConfiguration.class)
+@ApplicationServiceTest
 record MemberRegisterTest(MemberRegister memberRegister, EntityManager entityManager){
-
     @Test
     void register() {
-        Member member = memberRegister.register(MemberFixture.createMemberRequest());
+        Member member = memberRegister.register(MemberFixture.createMemberRegisterRequest());
 
         System.out.println(member);
 
@@ -31,9 +23,10 @@ record MemberRegisterTest(MemberRegister memberRegister, EntityManager entityMan
 
     @Test
     void duplicateEmailFail() {
-        memberRegister.register(MemberFixture.createMemberRequest());
+        MemberRegisterRequest memberRegisterRequest = MemberFixture.createMemberRegisterRequest();
+        memberRegister.register(memberRegisterRequest);
 
-        assertThatThrownBy(() -> memberRegister.register(MemberFixture.createMemberRequest()))
+        assertThatThrownBy(() -> memberRegister.register(memberRegisterRequest))
                 .isInstanceOf(DuplicateEmailException.class);
     }
 
@@ -104,14 +97,14 @@ record MemberRegisterTest(MemberRegister memberRegister, EntityManager entityMan
     }
 
     private Member registerMember() {
-        Member member = memberRegister.register(MemberFixture.createMemberRequest());
+        Member member = memberRegister.register(MemberFixture.createMemberRegisterRequest());
         entityManager.flush();
         entityManager.clear();
         return member;
     }
 
     private Member registerMember(String email) {
-        Member member = memberRegister.register(MemberFixture.createMemberRequest(email));
+        Member member = memberRegister.register(MemberFixture.createMemberRegisterRequest(email));
         entityManager.flush();
         entityManager.clear();
         return member;

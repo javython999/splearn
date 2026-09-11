@@ -47,6 +47,7 @@ dependencies {
     testImplementation("org.mockito:mockito-core:5.23.0")
     testImplementation("org.mockito:mockito-inline:5.2.0")
     testImplementation("com.tngtech.archunit:archunit-junit5:1.4.1")
+    testImplementation("org.instancio:instancio-core:6.0.0")
 
     spotbugsPlugins("com.github.spotbugs:spotbugs:4.8.3") // 버전은 맞게 조정
     spotbugsPlugins("com.github.spotbugs:spotbugs:4.8.3")

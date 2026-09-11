@@ -35,7 +35,7 @@ class MemberApiWebMvcTest {
         when(memberRegister.register(any()))
                 .thenReturn(member);
 
-        MemberRegisterRequest request = MemberFixture.createMemberRequest();
+        MemberRegisterRequest request = MemberFixture.createMemberRegisterRequest();
         String requestJson = objectMapper.writeValueAsString(request);
 
         assertThat(mvcTester.post()
@@ -51,7 +51,7 @@ class MemberApiWebMvcTest {
 
     @Test
     void registerFail() throws JsonProcessingException {
-        MemberRegisterRequest request = MemberFixture.createMemberRequest("invalidEmail");
+        MemberRegisterRequest request = MemberFixture.createMemberRegisterRequest("invalidEmail");
         String requestJson = objectMapper.writeValueAsString(request);
 
         assertThat(mvcTester.post()

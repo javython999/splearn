@@ -7,18 +7,14 @@ import com.errday.splearn.domain.instructor.InstructorFixture;
 import com.errday.splearn.domain.instructor.InstructorStatus;
 import com.errday.splearn.domain.member.Member;
 import com.errday.splearn.domain.member.MemberFixture;
-import jakarta.transaction.Transactional;
+import com.errday.splearn.support.stereotype.ApplicationServiceTest;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-@SpringBootTest
-@AutoConfigureMockMvc
-@Transactional
+@ApplicationServiceTest
 @RequiredArgsConstructor
 class InstructorApplicationTest {
     final InstructorApplication instructorApplication;

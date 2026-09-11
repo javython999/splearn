@@ -8,14 +8,10 @@ import com.errday.splearn.application.instructor.required.InstructorRepository;
 import com.errday.splearn.application.member.provided.MemberFinder;
 import com.errday.splearn.domain.instructor.Instructor;
 import com.errday.splearn.domain.member.Member;
-import jakarta.transaction.Transactional;
+import com.errday.splearn.support.stereotype.ValidatedApplicationService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
-import org.springframework.validation.annotation.Validated;
 
-@Service
-@Validated
-@Transactional
+@ValidatedApplicationService
 @RequiredArgsConstructor
 public class InstructorModifyService implements InstructorApplication {
 

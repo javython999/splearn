@@ -1,16 +1,20 @@
 package com.errday.splearn.domain.member;
 
 import com.errday.splearn.application.member.provided.MemberRegisterRequest;
+import org.instancio.Instancio;
+import org.instancio.Select;
 import org.springframework.test.util.ReflectionTestUtils;
 
 public class MemberFixture {
 
-    public static MemberRegisterRequest createMemberRequest(String email) {
-        return new MemberRegisterRequest(email, "nickname", "supersecret");
+    public static MemberRegisterRequest createMemberRegisterRequest(String email) {
+        return Instancio.of(MemberRegisterRequest.class)
+                .set(Select.field(MemberRegisterRequest::email), email)
+                .create();
     }
 
-    public static MemberRegisterRequest createMemberRequest() {
-        return createMemberRequest("test@test.com");
+    public static MemberRegisterRequest createMemberRegisterRequest() {
+        return createMemberRegisterRequest(Instancio.gen().net().email().get());
     }
 
     public static PasswordEncoder createPasswordEncoder() {
@@ -28,7 +32,7 @@ public class MemberFixture {
     }
 
     public static Member createMember() {
-        return  Member.register(createMemberRequest().toInfo(), createPasswordEncoder());
+        return  Member.register(createMemberRegisterRequest().toInfo(), createPasswordEncoder());
     }
 
     public static Member createActiveMember() {
@@ -38,12 +42,12 @@ public class MemberFixture {
     }
 
     public static Member createMember(Long id) {
-        Member member = Member.register(createMemberRequest().toInfo(), createPasswordEncoder());
+        Member member = Member.register(createMemberRegisterRequest().toInfo(), createPasswordEncoder());
         ReflectionTestUtils.setField(member, "id", id);
         return member;
     }
 
     public static Member createMember(String email) {
-        return Member.register(createMemberRequest(email).toInfo(), createPasswordEncoder());
+        return Member.register(createMemberRegisterRequest(email).toInfo(), createPasswordEncoder());
     }
 }

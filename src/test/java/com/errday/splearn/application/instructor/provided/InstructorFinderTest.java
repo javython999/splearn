@@ -5,28 +5,24 @@ import com.errday.splearn.application.member.provided.MemberRegister;
 import com.errday.splearn.domain.instructor.Instructor;
 import com.errday.splearn.domain.member.Member;
 import com.errday.splearn.domain.member.MemberFixture;
-import jakarta.transaction.Transactional;
+import com.errday.splearn.support.stereotype.ApplicationServiceTest;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@SpringBootTest
-@Transactional
+@ApplicationServiceTest
 @RequiredArgsConstructor
 class InstructorFinderTest {
     final InstructorFinder instructorFinder;
     final InstructorApplication instructorApplication;
     final MemberRegister memberRegister;
-    @Autowired
-    private InstructorRepository instructorRepository;
+    final InstructorRepository instructorRepository;
 
 
     @Test
     void findByMember() {
-        Member member = memberRegister.register(MemberFixture.createMemberRequest());
+        Member member = memberRegister.register(MemberFixture.createMemberRegisterRequest());
         member = memberRegister.activate(member.getId());
 
         Instructor instructor = instructorApplication.apply(new InstructorApplyRequest(member.getId()));

@@ -4,7 +4,7 @@ import com.errday.splearn.application.member.provided.MemberInfoUpdateRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static com.errday.splearn.domain.member.MemberFixture.createMemberRequest;
+import static com.errday.splearn.domain.member.MemberFixture.createMemberRegisterRequest;
 import static com.errday.splearn.domain.member.MemberFixture.createPasswordEncoder;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -14,29 +14,20 @@ class MemberTest {
 
     Member member;
     PasswordEncoder passwordEncoder;
+    MemberRegisterInfo registerRequest;
 
     @BeforeEach
     void setUp() {
         this.passwordEncoder = createPasswordEncoder();
-
-        member = Member.register(createMemberRequest().toInfo(), passwordEncoder);
+        registerRequest = createMemberRegisterRequest().toInfo();
+        member = Member.register(registerRequest, passwordEncoder);
     }
-
-
 
     @Test
     void registerMember() {
         assertThat(member.getStatus()).isEqualTo(MemberStatus.PENDING);
         assertThat(member.getDetail().getRegisteredAt()).isNotNull();
     }
-
-    /*
-    @Test
-    void constructorNullCheck() {
-        assertThatThrownBy(() -> Member.create(null, "user", "secret", passwordEncoder))
-                .isInstanceOf(NullPointerException.class);
-    }
-    */
 
     @Test
     void activate() {
@@ -77,7 +68,7 @@ class MemberTest {
 
     @Test
     void verifyPassword() {
-        assertThat(member.verifyPassword("supersecret", passwordEncoder)).isTrue();
+        assertThat(member.verifyPassword(registerRequest.password(), passwordEncoder)).isTrue();
         assertThat(member.verifyPassword("hello", passwordEncoder)).isFalse();
     }
 
@@ -105,10 +96,10 @@ class MemberTest {
     @Test
     void invalidEmail() {
         assertThatThrownBy(() -> {
-            Member.register(createMemberRequest("invalid Email").toInfo(), passwordEncoder);
+            Member.register(MemberFixture.createMemberRegisterRequest("invalid Email").toInfo(), passwordEncoder);
         }).isInstanceOf(IllegalArgumentException.class);
 
-        Member.register(createMemberRequest().toInfo(), passwordEncoder);
+        Member.register(createMemberRegisterRequest().toInfo(), passwordEncoder);
     }
 
     @Test
