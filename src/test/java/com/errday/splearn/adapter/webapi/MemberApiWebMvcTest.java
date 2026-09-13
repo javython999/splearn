@@ -1,9 +1,9 @@
 package com.errday.splearn.adapter.webapi;
 
 import com.errday.splearn.application.member.provided.MemberRegister;
+import com.errday.splearn.application.member.provided.MemberRegisterRequest;
 import com.errday.splearn.domain.member.Member;
 import com.errday.splearn.domain.member.MemberFixture;
-import com.errday.splearn.application.member.provided.MemberRegisterRequest;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;

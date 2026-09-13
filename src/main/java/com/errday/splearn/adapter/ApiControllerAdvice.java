@@ -1,12 +1,12 @@
 package com.errday.splearn.adapter;
 
+import com.errday.splearn.domain.member.DuplicateEmailException;
+import com.errday.splearn.domain.member.DuplicateProfileException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
-import com.errday.splearn.domain.member.DuplicateEmailException;
-import com.errday.splearn.domain.member.DuplicateProfileException;
 
 import java.time.LocalDateTime;
 

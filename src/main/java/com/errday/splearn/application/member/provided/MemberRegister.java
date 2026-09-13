@@ -1,7 +1,7 @@
 package com.errday.splearn.application.member.provided;
 
-import jakarta.validation.Valid;
 import com.errday.splearn.domain.member.Member;
+import jakarta.validation.Valid;
 
 /**
  * 회원의 등록과 관련된 기능을 제공한다

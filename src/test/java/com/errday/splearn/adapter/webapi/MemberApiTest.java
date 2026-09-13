@@ -2,10 +2,10 @@ package com.errday.splearn.adapter.webapi;
 
 import com.errday.splearn.adapter.webapi.dto.MemberRegisterResponse;
 import com.errday.splearn.application.member.provided.MemberRegister;
+import com.errday.splearn.application.member.provided.MemberRegisterRequest;
 import com.errday.splearn.application.member.required.MemberRepository;
 import com.errday.splearn.domain.member.Member;
 import com.errday.splearn.domain.member.MemberFixture;
-import com.errday.splearn.application.member.provided.MemberRegisterRequest;
 import com.errday.splearn.domain.member.MemberStatus;
 import com.errday.splearn.support.stereotype.WebApiAdapterTest;
 import com.fasterxml.jackson.core.JsonProcessingException;

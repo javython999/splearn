@@ -3,6 +3,7 @@ package com.errday.splearn.domain.member;
 import com.errday.splearn.domain.AbstractEntity;
 import com.errday.splearn.domain.shared.Email;
 import jakarta.persistence.Entity;
+import jakarta.persistence.OneToOne;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -26,8 +27,10 @@ public class Member extends AbstractEntity {
 
     private String passwordHash;
 
+    @OneToOne
     private MemberStatus status;
 
+    @OneToOne
     private MemberDetail detail;
 
     public static Member register(MemberRegisterInfo createRequest, PasswordEncoder passwordEncoder) {

@@ -2,7 +2,8 @@ package com.errday.splearn.domain.instructor;
 
 import com.errday.splearn.domain.AbstractEntity;
 import com.errday.splearn.domain.member.Member;
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.OneToOne;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,11 +17,9 @@ import static org.springframework.util.Assert.state;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Instructor extends AbstractEntity {
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne
     private Member member;
 
-    @Enumerated(EnumType.STRING)
-    @Column(length = 20)
     private InstructorStatus status;
 
     public static Instructor apply(Member member) {

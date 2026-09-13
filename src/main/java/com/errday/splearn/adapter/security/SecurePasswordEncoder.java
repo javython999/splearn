@@ -1,8 +1,8 @@
 package com.errday.splearn.adapter.security;
 
+import com.errday.splearn.domain.member.PasswordEncoder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
-import com.errday.splearn.domain.member.PasswordEncoder;
 
 @Component
 public class SecurePasswordEncoder implements PasswordEncoder {

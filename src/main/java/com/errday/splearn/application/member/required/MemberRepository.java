@@ -1,10 +1,10 @@
 package com.errday.splearn.application.member.required;
 
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.Repository;
 import com.errday.splearn.domain.member.Member;
 import com.errday.splearn.domain.member.Profile;
 import com.errday.splearn.domain.shared.Email;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.Repository;
 
 import java.util.Optional;
 
