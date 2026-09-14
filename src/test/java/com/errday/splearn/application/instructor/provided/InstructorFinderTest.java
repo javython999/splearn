@@ -1,11 +1,8 @@
 package com.errday.splearn.application.instructor.provided;
 
-import com.errday.splearn.application.instructor.required.InstructorRepository;
-import com.errday.splearn.application.member.provided.MemberRegister;
 import com.errday.splearn.domain.instructor.Instructor;
-import com.errday.splearn.domain.member.Member;
-import com.errday.splearn.domain.member.MemberFixture;
 import com.errday.splearn.support.stereotype.ApplicationServiceTest;
+import com.errday.splearn.support.test.BaseApplicationServiceTest;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Test;
 
@@ -13,27 +10,21 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @ApplicationServiceTest
 @RequiredArgsConstructor
-class InstructorFinderTest {
+class InstructorFinderTest extends BaseApplicationServiceTest {
     final InstructorFinder instructorFinder;
     final InstructorApplication instructorApplication;
-    final MemberRegister memberRegister;
-    final InstructorRepository instructorRepository;
 
 
     @Test
     void findByMember() {
-        Member member = memberRegister.register(MemberFixture.createMemberRegisterRequest());
-        member = memberRegister.activate(member.getId());
+        prepareMember();
 
         Instructor instructor = instructorApplication.apply(new InstructorApplyRequest(member.getId()));
 
         Instructor found = instructorFinder.findByMember(member.getId()).orElseThrow();
 
         assertThat(instructor).isEqualTo(found);
-        assertThat(instructorRepository.findByMemberId(Long.MAX_VALUE).isPresent()).isFalse();
+        assertThat(instructorFinder.findByMember(Long.MAX_VALUE).isPresent()).isFalse();
     }
 
-    @Test
-    void testFindByMember() {
-    }
 }

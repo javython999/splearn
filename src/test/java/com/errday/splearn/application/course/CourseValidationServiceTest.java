@@ -1,0 +1,44 @@
+package com.errday.splearn.application.course;
+
+import com.errday.splearn.application.course.provided.CourseCreateRequest;
+import com.errday.splearn.application.course.provided.CourseValidator;
+import com.errday.splearn.application.course.required.CourseRepository;
+import com.errday.splearn.domain.course.Course;
+import com.errday.splearn.domain.course.CourseFixture;
+import com.errday.splearn.support.exception.ValidationException;
+import com.errday.splearn.support.stereotype.ApplicationServiceTest;
+import com.errday.splearn.support.test.BaseApplicationServiceTest;
+import lombok.RequiredArgsConstructor;
+import org.junit.jupiter.api.Test;
+
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
+
+@ApplicationServiceTest
+@RequiredArgsConstructor
+class CourseValidationServiceTest extends BaseApplicationServiceTest {
+    final CourseValidator courseValidator;
+    final CourseRepository courseRepository;
+
+    @Test
+    void titleDuplication() {
+        var instructor1 = prepareInstructor();
+        var instructor2 = prepareInstructor();
+
+        courseRepository.save(CourseFixture.createCourse(instructor1, "Clean Spring"));
+        courseRepository.save(CourseFixture.createCourse(instructor2, "Clean Code"));
+
+        // instructor1 중복되지 않는 제목 pass
+        courseValidator.validateForCreate(instructor1, new CourseCreateRequest(instructor1.getId(), "Spring 7", null));
+
+        // instructor1 중복 제목 fail
+        assertThatThrownBy(() -> courseValidator.validateForCreate(instructor1, new CourseCreateRequest(instructor1.getId(), "Clean Spring", null)))
+                .isInstanceOfSatisfying(ValidationException.class, error -> {
+                    assertThat(error.getErrors()).hasSize(1);
+                });
+        
+        // instructor2 instructor1과 중복되는 제목 pass
+        courseValidator.validateForCreate(instructor2, new CourseCreateRequest(instructor2.getId(), "Clean Spring", null));
+    }
+
+}
