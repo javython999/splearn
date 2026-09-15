@@ -4,10 +4,10 @@ import com.errday.splearn.application.course.provided.CourseCreateRequest;
 import com.errday.splearn.application.course.provided.CourseInfoUpdateRequest;
 import com.errday.splearn.application.course.provided.CourseValidator;
 import com.errday.splearn.application.course.required.CourseRepository;
+import com.errday.splearn.domain.course.Course;
 import com.errday.splearn.domain.instructor.Instructor;
 import com.errday.splearn.support.exception.ValidationException;
 import com.errday.splearn.support.stereotype.ApplicationService;
-import jakarta.validation.constraints.Size;
 import lombok.RequiredArgsConstructor;
 
 import java.util.ArrayList;
@@ -24,7 +24,7 @@ public class CourseValidationService implements CourseValidator {
 
         List<String> errors = new ArrayList<>();
 
-        checkTitleDuplication(instructor, request.title(), errors);
+        checkTitleDuplicationForCreate(instructor, request.title(), errors);
         checkBannedWords(request.title(), errors);
         checkBannedWords(request.description(), errors);
 
@@ -33,18 +33,51 @@ public class CourseValidationService implements CourseValidator {
         }
     }
 
-    private void checkTitleDuplication(Instructor instructor, String title, List<String> errors) {
+    @Override
+    public void validateForUpdate(Course course, CourseInfoUpdateRequest request) throws ValidationException {
+        List<String> errors = new ArrayList<>();
+
+        checkTitleDuplicationForUpdate(course, course.getInstructor(), request.title(), errors);
+        checkBannedWords(request.title(), errors);
+        checkBannedWords(request.description(), errors);
+
+        if (!errors.isEmpty()) {
+            throw new ValidationException(errors);
+        }
+    }
+
+    @Override
+    public void validateForReview(Course course) throws ValidationException {
+        // TODO
+    }
+
+    @Override
+    public void validateForPublish(Course course) throws ValidationException {
+        // TODO
+    }
+
+    @Override
+    public void validateForArchive(Course course) throws ValidationException {
+        // TODO
+    }
+
+    private void checkTitleDuplicationForCreate(Instructor instructor, String title, List<String> errors) {
         if (courseRepository.findByInstructorAndTitle(instructor, title).isPresent()) {
             errors.add("이미 사용중인 강의 제목입니다. " + title);
         }
+    }
+
+    private void checkTitleDuplicationForUpdate(Course course, Instructor instructor, String title, List<String> errors) {
+        courseRepository.findByInstructorAndTitle(instructor, title).ifPresent(found -> {
+           if (!found.equals(course)) {
+               errors.add("이미 사용중인 강의 제목입니다. " + title);
+           }
+        });
     }
 
     private void checkBannedWords(String text, List<String> errors) {
         // TODO: Implement banned words check
     }
 
-    @Override
-    public void validateForUpdate(Instructor instructor, CourseInfoUpdateRequest request) {
 
-    }
 }

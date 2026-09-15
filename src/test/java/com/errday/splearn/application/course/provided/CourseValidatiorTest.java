@@ -1,7 +1,5 @@
-package com.errday.splearn.application.course;
+package com.errday.splearn.application.course.provided;
 
-import com.errday.splearn.application.course.provided.CourseCreateRequest;
-import com.errday.splearn.application.course.provided.CourseValidator;
 import com.errday.splearn.application.course.required.CourseRepository;
 import com.errday.splearn.domain.course.Course;
 import com.errday.splearn.domain.course.CourseFixture;
@@ -16,12 +14,12 @@ import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 
 @ApplicationServiceTest
 @RequiredArgsConstructor
-class CourseValidationServiceTest extends BaseApplicationServiceTest {
+class CourseValidatiorTest extends BaseApplicationServiceTest {
     final CourseValidator courseValidator;
     final CourseRepository courseRepository;
 
     @Test
-    void titleDuplication() {
+    void titleDuplicationForCreate() {
         var instructor1 = prepareInstructor();
         var instructor2 = prepareInstructor();
 
@@ -39,6 +37,25 @@ class CourseValidationServiceTest extends BaseApplicationServiceTest {
         
         // instructor2 instructor1과 중복되는 제목 pass
         courseValidator.validateForCreate(instructor2, new CourseCreateRequest(instructor2.getId(), "Clean Spring", null));
+    }
+
+    @Test
+    void titleDuplicationForUpdate() {
+        var instructor1 = prepareInstructor();
+        var instructor2 = prepareInstructor();
+
+        Course course1_1 = courseRepository.save(CourseFixture.createCourse(instructor1, "Clean Spring"));
+        Course course1_2 = courseRepository.save(CourseFixture.createCourse(instructor1, "Clean Code"));
+        Course course2 = courseRepository.save(CourseFixture.createCourse(instructor2, "Clean Spring"));
+
+        // title 변경 없이 update pass
+        courseValidator.validateForUpdate(course1_1, CourseFixture.createCourseInfoForUpdateRequest(course1_1.getTitle()));
+
+        // title 변경시 중복
+        assertThatThrownBy(() -> courseValidator.validateForUpdate(course1_1, CourseFixture.createCourseInfoForUpdateRequest(course1_2.getTitle())))
+                .isInstanceOfSatisfying(ValidationException.class, e -> {
+                    assertThat(e.getErrors()).hasSize(1);
+                });
     }
 
 }
