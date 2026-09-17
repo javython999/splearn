@@ -12,6 +12,7 @@ import com.errday.splearn.domain.instructor.Instructor;
 import com.errday.splearn.domain.instructor.InstructorFixture;
 import com.errday.splearn.domain.member.Member;
 import com.errday.splearn.domain.member.MemberFixture;
+import jakarta.annotation.Nullable;
 import jakarta.persistence.EntityManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -39,7 +40,7 @@ public class BaseRepositoryTest {
     protected Enrollment enrollment;
 
     protected Course preparePublishedCourse() {
-        prepareActiveInstructor();
+        prepareCourse();
 
         course = courseRepository.save(CourseFixture.createCourse(instructor, null));
         course.updateInfo(CourseFixture.createCourseInfoForUpdateRequest(null).toInfo());
@@ -49,9 +50,33 @@ public class BaseRepositoryTest {
         return course;
     }
 
+    protected Course prepareCourse() {
+        return prepareCourse(null, null);
+    }
+
+    protected Course prepareCourse(@Nullable Instructor instructor, @Nullable String title) {
+        if (instructor == null) {
+            prepareActiveInstructor();
+        }
+
+        course = courseRepository.save(CourseFixture.createCourse(
+                instructor == null ? this.instructor : instructor, title));
+
+        course.updateInfo(CourseFixture.createCourseInfoForUpdateRequest(title).toInfo());
+
+        return course;
+    }
+
+
     protected Instructor prepareActiveInstructor() {
         prepareActiveMember();
 
+        instructor = instructorRepository.save(InstructorFixture.createActiveInstructor(member));
+
+        return instructor;
+    }
+
+    protected Instructor prepareActiveInstructor(Member member) {
         instructor = instructorRepository.save(InstructorFixture.createActiveInstructor(member));
 
         return instructor;

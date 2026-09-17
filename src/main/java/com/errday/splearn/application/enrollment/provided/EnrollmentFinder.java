@@ -8,7 +8,7 @@ import java.util.Optional;
 public interface EnrollmentFinder {
     Enrollment find(Long enrollmentId);
 
-    List<Enrollment> findAllByMemberId(Long memberId);
+    List<Enrollment> findByMemberId(Long memberId);
 
     Optional<Enrollment> findByMemberAndCourse(Long memberId, Long courseId);
 }

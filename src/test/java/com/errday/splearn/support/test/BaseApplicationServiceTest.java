@@ -1,10 +1,13 @@
 package com.errday.splearn.support.test;
 
 import com.errday.splearn.application.course.provided.CourseCreator;
+import com.errday.splearn.application.enrollment.provided.EnrollRequest;
+import com.errday.splearn.application.enrollment.provided.Enroller;
 import com.errday.splearn.application.instructor.provided.InstructorApplication;
 import com.errday.splearn.application.member.provided.MemberRegister;
 import com.errday.splearn.domain.course.Course;
 import com.errday.splearn.domain.course.CourseFixture;
+import com.errday.splearn.domain.enrollment.Enrollment;
 import com.errday.splearn.domain.instructor.Instructor;
 import com.errday.splearn.domain.instructor.InstructorFixture;
 import com.errday.splearn.domain.member.Member;
@@ -25,13 +28,17 @@ public class BaseApplicationServiceTest {
     @Autowired
     CourseCreator courseCreator;
 
+    @Autowired
+    Enroller enroller;
+
     protected Member member;
     protected Instructor instructor;
     protected Course course;
+    protected Enrollment enrollment;
 
     @NonNull
     protected Instructor prepareInstructor() {
-        prepareMember();
+        prepareActiveMember();
 
         instructor = instructorApplication.apply(InstructorFixture.createApplyRequest(member));
         instructor.approve();
@@ -39,7 +46,7 @@ public class BaseApplicationServiceTest {
         return instructor;
     }
 
-    protected @NonNull Member prepareMember() {
+    protected @NonNull Member prepareActiveMember() {
         member = memberRegister.register(MemberFixture.createMemberRegisterRequest());
         member.activate();
 
@@ -48,8 +55,27 @@ public class BaseApplicationServiceTest {
 
     protected Course prepareCourse() {
         prepareInstructor();
+
         course = courseCreator.create(CourseFixture.createCoureCreateRequest(instructor.getId(), null));
         course.updateInfo(CourseFixture.createCourseInfoForUpdateRequest(null).toInfo());
+
         return course;
+    }
+
+    protected Course preparePublishedCourse() {
+        prepareCourse();
+
+        course.submitForReview();
+        course.publish();
+
+        return course;
+    }
+
+    protected Enrollment prepareEnrollment() {
+        Member member = prepareActiveMember();
+        Course course = preparePublishedCourse();
+
+        enrollment = enroller.enroll(new EnrollRequest(member.getId(), course.getId()));
+        return enrollment;
     }
 }
