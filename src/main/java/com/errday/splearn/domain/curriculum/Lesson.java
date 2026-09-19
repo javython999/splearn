@@ -13,7 +13,7 @@ import java.util.Objects;
 
 @Entity
 @Getter
-@ToString(callSuper = true, exclude = {})
+@ToString(callSuper = true, exclude = {"section"})
 @NoArgsConstructor
 public class Lesson extends AbstractEntity {
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
@@ -29,5 +29,9 @@ public class Lesson extends AbstractEntity {
 
     void updateTitle(String title) {
         this.title = Objects.requireNonNull(title);
+    }
+
+    public void moveTo(Section section) {
+        this.section = section;
     }
 }

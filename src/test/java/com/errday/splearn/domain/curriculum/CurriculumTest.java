@@ -2,9 +2,12 @@ package com.errday.splearn.domain.curriculum;
 
 import com.errday.splearn.domain.course.CourseFixture;
 import org.junit.jupiter.api.Test;
+import org.springframework.test.util.ReflectionTestUtils;
 
 import java.util.List;
 
+import static com.errday.splearn.domain.curriculum.LessonContent.lesson;
+import static com.errday.splearn.domain.curriculum.SectionContent.section;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 
@@ -112,6 +115,231 @@ class CurriculumTest {
 
         assertThat(lessons).extracting(Lesson::getTitle)
                 .containsExactly("L0_0 Updated", "L0_1", "L1 Updated");
+    }
+
+    @Test
+    void removeLesson() {
+        Curriculum curriculum = CurriculumFixture.createCurriculum();
+        Section section0 = curriculum.addSection("S0");
+        Section section1 = curriculum.addSection("S1");
+        Lesson lesson0 = curriculum.addLesson(0, "L0");
+        Lesson lesson1 = curriculum.addLesson(0, "L1");
+        Lesson lesson2 = curriculum.addLesson(1, "L2");
+        Lesson lesson3 = curriculum.addLesson(1, "L3");
+
+        assertThat(curriculum.allLessons()).extracting(Lesson::getTitle)
+                        .containsExactly("L0", "L1", "L2", "L3");
+
+        curriculum.removeLesson(0, 0);
+
+        assertThat(curriculum.allLessons()).extracting(Lesson::getTitle)
+                .containsExactly("L1", "L2", "L3");
+
+        curriculum.removeLesson(1, 1);
+
+        assertThat(curriculum.allLessons()).extracting(Lesson::getTitle)
+                .containsExactly("L1", "L2");
+    }
+
+    @Test
+    void removeSection() {
+        Curriculum curriculum = CurriculumFixture.createCurriculum();
+        Section section0 = curriculum.addSection("S0");
+        Section section1 = curriculum.addSection("S1");
+        Section section2 = curriculum.addSection("S2");
+        Lesson lesson0 = curriculum.addLesson(0, "L0");
+        Lesson lesson1 = curriculum.addLesson(0, "L1");
+        Lesson lesson2 = curriculum.addLesson(1, "L2");
+        Lesson lesson3 = curriculum.addLesson(1, "L3");
+        Lesson lesson4 = curriculum.addLesson(2, "L4");
+        Lesson lesson5 = curriculum.addLesson(2, "L5");
+
+        assertThat(SectionContent.from(curriculum)).containsExactly(
+                section("S0", lesson("L0"), lesson("L1")),
+                section("S1", lesson("L2"), lesson("L3")),
+                section("S2", lesson("L4"), lesson("L5"))
+        );
+
+        // 섹션을 삭제하면 수업은 앞의 섹션의 뒤에 추가된다.
+        curriculum.removeSection(2);
+
+        assertThat(curriculum.getSections()).containsExactly(section0, section1);
+        assertThat(SectionContent.from(curriculum)).containsExactly(
+                section("S0", lesson("L0"), lesson("L1")),
+                section("S1", lesson("L2"), lesson("L3"), lesson("L4"), lesson("L5"))
+        );
+
+        // 단, 첫번째 섹션을 삭제하면 수업은 다음 수업 앞에 추가 된다.
+        curriculum.removeSection(0);
+
+        assertThat(curriculum.getSections()).containsExactly(section1);
+        assertThat(SectionContent.from(curriculum)).containsExactly(
+                section("S1",  lesson("L0"), lesson("L1"), lesson("L2"), lesson("L3"), lesson("L4"), lesson("L5"))
+        );
+
+        // 하나 남은 섹션은 삭제할 수 없다.
+        assertThatThrownBy(() -> curriculum.removeSection(0))
+                .isInstanceOf(IllegalStateException.class);
+    }
+
+    @Test
+    void moveLesson() {
+        Curriculum curriculum = CurriculumFixture.createCurriculum();
+        Section section0 = curriculum.addSection("S0");
+        Section section1 = curriculum.addSection("S1");
+        Section section2 = curriculum.addSection("S2");
+        Lesson lesson0 = curriculum.addLesson(0, "L0");
+        Lesson lesson1 = curriculum.addLesson(0, "L1");
+        Lesson lesson2 = curriculum.addLesson(0, "L2");
+        Lesson lesson3 = curriculum.addLesson(1, "L3");
+        Lesson lesson4 = curriculum.addLesson(1, "L4");
+        Lesson lesson5 = curriculum.addLesson(2, "L5");
+        Lesson lesson6 = curriculum.addLesson(2, "L6");
+
+        assertThat(SectionContent.from(curriculum)).containsExactly(
+                section("S0", lesson("L0"), lesson("L1"), lesson("L2")),
+                section("S1", lesson("L3"), lesson("L4")),
+                section("S2", lesson("L5"), lesson("L6"))
+        );
+
+        curriculum.moveLesson(0, 0, 0, 1);
+
+        assertThat(SectionContent.from(curriculum)).containsExactly(
+                section("S0", lesson("L1"), lesson("L0"), lesson("L2")),
+                section("S1", lesson("L3"), lesson("L4")),
+                section("S2", lesson("L5"), lesson("L6"))
+        );
+
+        curriculum.moveLesson(0, 2, 0, 0);
+
+        assertThat(SectionContent.from(curriculum)).containsExactly(
+                section("S0", lesson("L2"), lesson("L1"), lesson("L0")),
+                section("S1", lesson("L3"), lesson("L4")),
+                section("S2", lesson("L5"), lesson("L6"))
+        );
+
+        curriculum.moveLesson(0, 1, 1, 2);
+
+        assertThat(SectionContent.from(curriculum)).containsExactly(
+                section("S0", lesson("L2"), lesson("L0")),
+                section("S1", lesson("L3"), lesson("L4"), lesson("L1")),
+                section("S2", lesson("L5"), lesson("L6"))
+        );
+        assertThat(lesson1.getSection()).isEqualTo(section1);
+
+        curriculum.moveLesson(2, 1, 0, 1);
+
+        assertThat(SectionContent.from(curriculum)).containsExactly(
+                section("S0", lesson("L2"), lesson("L6"), lesson("L0")),
+                section("S1", lesson("L3"), lesson("L4"), lesson("L1")),
+                section("S2", lesson("L5"))
+        );
+        assertThat(lesson6.getSection()).isEqualTo(section0);
+    }
+
+    @Test
+    void validate() {
+        Curriculum curriculum = CurriculumFixture.createCurriculum();
+
+        // 최소한 하나의 섹션은 있어야 한다.
+        assertThatThrownBy(curriculum::validate)
+                .isInstanceOf(InvalidCurriculumException.class);
+
+        curriculum.addSection("S0");
+
+        assertThatThrownBy(curriculum::validate)
+                .isInstanceOf(InvalidCurriculumException.class);
+
+        curriculum.addLesson(0, "L0");
+
+        curriculum.validate();
+
+        curriculum.addSection("S1");
+        curriculum.addLesson(1,"L1");
+
+        curriculum.validate();
+
+        // 수업이 없는 섹션은 검증 실패
+        curriculum.removeLesson(1, 0);
+        assertThatThrownBy(curriculum::validate)
+                .isInstanceOf(InvalidCurriculumException.class);
+    }
+
+    @Test
+    void firstLesson() {
+        Curriculum curriculum = CurriculumFixture.createCurriculum();
+        Section section0 = curriculum.addSection("S0");
+        Section section1 = curriculum.addSection("S1");
+
+        assertThat(curriculum.firstLesson()).isEmpty();
+
+        Lesson lesson0 = curriculum.addLesson(0, "L0");
+        Lesson lesson1 = curriculum.addLesson(0, "L1");
+        Lesson lesson2 = curriculum.addLesson(0, "L2");
+        Lesson lesson3 = curriculum.addLesson(1, "L3");
+        Lesson lesson4 = curriculum.addLesson(1, "L4");
+
+        assertThat(curriculum.firstLesson().orElseThrow()).isEqualTo(lesson0);
+    }
+
+    @Test
+    void next() {
+        Curriculum curriculum = CurriculumFixture.createCurriculum();
+        Section section0 = curriculum.addSection("S0");
+        Section section1 = curriculum.addSection("S1");
+        Lesson lesson0 = curriculum.addLesson(0, "L0");
+        Lesson lesson1 = curriculum.addLesson(0, "L1");
+        Lesson lesson2 = curriculum.addLesson(0, "L2");
+
+        Lesson lesson = curriculum.firstLesson().orElseThrow();
+
+        lesson = curriculum.nextLesson(lesson).orElseThrow();
+        assertThat(lesson).isEqualTo(lesson1);
+
+        lesson = curriculum.nextLesson(lesson).orElseThrow();
+        assertThat(lesson).isEqualTo(lesson2);
+
+        assertThat(curriculum.nextLesson(lesson)).isEmpty();
+    }
+
+    @Test
+    void nextWithId() {
+        Curriculum curriculum = CurriculumFixture.createCurriculum();
+        Section section0 = curriculum.addSection("S0");
+        Section section1 = curriculum.addSection("S1");
+        Lesson lesson0 = curriculum.addLesson(0, "L0");
+        assignId(lesson0, 10L);
+        Lesson lesson1 = curriculum.addLesson(0, "L1");
+        assignId(lesson1, 11L);
+        Lesson lesson2 = curriculum.addLesson(0, "L2");
+        assignId(lesson2, 12L);
+
+        Lesson lesson = curriculum.nextLesson(10L).orElseThrow();
+        assertThat(lesson).isEqualTo(lesson1);
+
+        lesson = curriculum.nextLesson(lesson.getId()).orElseThrow();
+        assertThat(lesson).isEqualTo(lesson2);
+
+        assertThat(curriculum.nextLesson(lesson.getId())).isEmpty();
+    }
+
+    @Test
+    void unmodifiableSectionsAndLessons() {
+        Curriculum curriculum = CurriculumFixture.createCurriculum();
+        Section section0 = curriculum.addSection("S0");
+        Lesson lesson0 = curriculum.addLesson(0, "L0");
+
+        assertThatThrownBy(() -> curriculum.getSections().add(new Section(curriculum, "Fail")))
+                .isInstanceOf(UnsupportedOperationException.class);
+
+        Section section = curriculum.getSections().getFirst();
+
+        assertThatThrownBy(() -> section.getLessons().add(new Lesson(section, "Fail")))
+                .isInstanceOf(UnsupportedOperationException.class);
+    }
+
+    private void assignId(Lesson lesson, Long id) {
+        ReflectionTestUtils.setField(lesson, "id", id);
     }
 
 }
