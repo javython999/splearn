@@ -7,7 +7,7 @@ import com.errday.splearn.support.test.BaseApplicationServiceTest;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Test;
 
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 @ApplicationServiceTest
 @RequiredArgsConstructor

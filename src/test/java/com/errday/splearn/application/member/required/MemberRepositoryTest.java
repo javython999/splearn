@@ -12,7 +12,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import static com.errday.splearn.domain.member.MemberFixture.createMemberRegisterRequest;
 import static com.errday.splearn.domain.member.MemberFixture.createPasswordEncoder;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @DataJpaTest
 @RequiredArgsConstructor

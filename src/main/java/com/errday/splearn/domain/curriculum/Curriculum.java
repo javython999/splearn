@@ -15,13 +15,14 @@ import static org.springframework.util.Assert.state;
 
 @Entity
 @Getter
-@ToString(callSuper = true, exclude = {"sections"})
+@ToString(callSuper = true, exclude = {"course", "sections"})
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Curriculum extends AbstractEntity {
     @OneToOne(optional = false, fetch = FetchType.LAZY)
     private Course course;
 
     @OneToMany(mappedBy = "curriculum", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OrderColumn(name = "section_order")
     @Getter(AccessLevel.NONE)
     private List<Section> sections = new ArrayList<>();
 
@@ -33,7 +34,7 @@ public class Curriculum extends AbstractEntity {
         return Collections.unmodifiableList(sections);
     }
 
-    Section addSection(String title) {
+    public Section addSection(String title) {
         Section section = new Section(this, title);
 
         sections.add(section);
@@ -41,7 +42,7 @@ public class Curriculum extends AbstractEntity {
         return section;
     }
 
-    Section addSection(int sectionIndex, String title) {
+    public Section addSection(int sectionIndex, String title) {
         Objects.checkIndex(sectionIndex, sections.size() + 1);
 
         Section section = new Section(this, title);
@@ -51,23 +52,22 @@ public class Curriculum extends AbstractEntity {
         return section;
     }
 
-    Lesson addLesson(int sectionIndex, String title) {
+    public Lesson addLesson(int sectionIndex, String title) {
         return sections.get(sectionIndex).addLesson(title);
     }
 
-    Section updateSectionTitle(int sectionIndex, String title) {
+    public void updateSectionTitle(int sectionIndex, String title) {
         Section section = sections.get(sectionIndex);
         section.updateTitle(title);
-        return section;
     }
 
-    void updateLessonTitle(int sectionIndex, int lessonIndex, String title) {
+    public void updateLessonTitle(int sectionIndex, int lessonIndex, String title) {
         Section section = sections.get(sectionIndex);
         section.updateLessonTitle(lessonIndex, title);
     }
 
-    public void removeLesson(int sectionIndex, int lessonIndex) {
-        sections.get(sectionIndex).removeLesson(lessonIndex);
+    public Lesson removeLesson(int sectionIndex, int lessonIndex) {
+        return sections.get(sectionIndex).removeLesson(lessonIndex);
     }
 
     public List<Lesson> allLessons() {
@@ -76,7 +76,7 @@ public class Curriculum extends AbstractEntity {
                 .toList();
     }
 
-    public void removeSection(int sectionIndex) {
+    public Section removeSection(int sectionIndex) {
         state(this.sections.size() > 1, "마지막 남은 섹션은 삭제할 수 없습니다.");
 
         Section removed = sections.remove(sectionIndex);
@@ -90,6 +90,7 @@ public class Curriculum extends AbstractEntity {
             removed.moveAllLessonsTo(previous, previous.getLessons().size());
         }
 
+        return removed;
     }
 
     public void moveLesson(int fromSectionIndex, int fromLessonIndex, int toSectionIndex, int toLessonIndex) {

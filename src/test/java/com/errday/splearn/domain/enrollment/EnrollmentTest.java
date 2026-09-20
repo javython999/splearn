@@ -6,8 +6,8 @@ import com.errday.splearn.domain.member.Member;
 import com.errday.splearn.domain.member.MemberFixture;
 import org.junit.jupiter.api.Test;
 
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class EnrollmentTest {
 

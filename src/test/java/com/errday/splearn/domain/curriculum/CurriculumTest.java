@@ -9,7 +9,7 @@ import java.util.List;
 import static com.errday.splearn.domain.curriculum.LessonContent.lesson;
 import static com.errday.splearn.domain.curriculum.SectionContent.section;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class CurriculumTest {
     @Test

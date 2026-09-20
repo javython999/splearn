@@ -14,6 +14,8 @@ import com.errday.splearn.domain.member.Member;
 import com.errday.splearn.domain.member.MemberFixture;
 import jakarta.annotation.Nullable;
 import jakarta.persistence.EntityManager;
+import org.hibernate.SessionFactory;
+import org.hibernate.stat.Statistics;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
@@ -91,5 +93,12 @@ public class BaseRepositoryTest {
     protected Enrollment prepareEnrollment(Member member, Course course) {
         enrollment = enrollmentRepository.save(EnrollmentFixture.createEnrollment(member, course));
         return enrollment;
+    }
+
+    protected Statistics prepareStatistics() {
+        Statistics statistics = entityManager.getEntityManagerFactory().unwrap(SessionFactory.class).getStatistics();
+        statistics.setStatisticsEnabled(true);
+        statistics.clear();
+        return statistics;
     }
 }
