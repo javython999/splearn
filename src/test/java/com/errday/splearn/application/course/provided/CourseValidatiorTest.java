@@ -3,6 +3,7 @@ package com.errday.splearn.application.course.provided;
 import com.errday.splearn.application.course.required.CourseRepository;
 import com.errday.splearn.domain.course.Course;
 import com.errday.splearn.domain.course.CourseFixture;
+import com.errday.splearn.domain.curriculum.Curriculum;
 import com.errday.splearn.support.exception.ValidationException;
 import com.errday.splearn.support.stereotype.ApplicationServiceTest;
 import com.errday.splearn.support.test.BaseApplicationServiceTest;
@@ -17,6 +18,7 @@ import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 class CourseValidatiorTest extends BaseApplicationServiceTest {
     final CourseValidator courseValidator;
     final CourseRepository courseRepository;
+    final CoursePublisher coursePublisher;
 
     @Test
     void titleDuplicationForCreate() {
@@ -56,6 +58,27 @@ class CourseValidatiorTest extends BaseApplicationServiceTest {
                 .isInstanceOfSatisfying(ValidationException.class, e -> {
                     assertThat(e.getErrors()).hasSize(1);
                 });
+    }
+
+    @Test
+    void submitForReviewFailInvalidCurriculum() {
+        Course course = prepareCourse();
+        Curriculum curriculum = prepareCurriculumSectionsAndLessons(course);
+        curriculum.removeLesson(2, 0);
+
+        assertThatThrownBy(() -> coursePublisher.submitForReview(course.getId()))
+                        .isInstanceOf(ValidationException.class);
+    }
+
+    @Test
+    void publishFailInvalidCurriculum() {
+        Course course = prepareCourse();
+        Curriculum curriculum = prepareCurriculumSectionsAndLessons(course);
+        coursePublisher.submitForReview(course.getId());
+        curriculum.removeLesson(2, 0);
+
+        assertThatThrownBy(() -> coursePublisher.publish(course.getId()))
+                .isInstanceOf(ValidationException.class);
     }
 
 }

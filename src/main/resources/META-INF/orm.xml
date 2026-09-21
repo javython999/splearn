@@ -67,22 +67,6 @@
         </attributes>
     </entity>
 
-    <embeddable class="com.errday.splearn.domain.member.Profile">
-        <attributes>
-            <basic name="address">
-                <column name="profile_address" length="20"/>
-            </basic>
-        </attributes>
-    </embeddable>
-
-    <embeddable class="com.errday.splearn.domain.shared.Email">
-        <attributes>
-            <basic name="address">
-                <column name="email_address" nullable="false" length="150"/>
-            </basic>
-        </attributes>
-    </embeddable>
-
     <entity class="com.errday.splearn.domain.instructor.Instructor">
         <table name="instructor"/>
         <attributes>
@@ -135,4 +119,82 @@
             </basic>
         </attributes>
     </entity>
+
+    <entity class="com.errday.splearn.domain.enrollment.Enrollment">
+        <table name="enrollment">
+            <unique-constraint name="UK_ENROLLMENT_MEMBER_COURSE">
+                <column-name>member_id</column-name>
+                <column-name>course_id</column-name>
+            </unique-constraint>
+        </table>
+        <attributes>
+            <basic name="status">
+                <column name="status" nullable="false" length="20"/>
+                <enumerated>STRING</enumerated>
+            </basic>
+            <basic name="enrolledAt">
+                <column name="enrolled_at" nullable="false"/>
+            </basic>
+            <basic name="completedAt">
+                <column name="completed_at"/>
+            </basic>
+            <many-to-one name="member" optional="false" fetch="LAZY"/>
+            <many-to-one name="course" optional="false" fetch="LAZY"/>
+        </attributes>
+    </entity>
+
+    <entity class="com.errday.splearn.domain.curriculum.Curriculum">
+        <table name="curriculum"/>
+        <attributes>
+            <one-to-many name="sections" mapped-by="curriculum" orphan-removal="true">
+                <order-column name="section_order"/>
+                <cascade>
+                    <cascade-all/>
+                </cascade>
+            </one-to-many>
+            <one-to-one name="course" optional="false" fetch="LAZY"/>
+        </attributes>
+    </entity>
+
+    <entity class="com.errday.splearn.domain.curriculum.Section">
+        <table name="section"/>
+        <attributes>
+            <basic name="title">
+                <column name="title" length="200"/>
+            </basic>
+            <many-to-one name="curriculum" optional="false" fetch="LAZY"/>
+            <one-to-many name="lessons" mapped-by="section">
+                <order-column name="lesson_order"/>
+                <cascade>
+                    <cascade-all/>
+                </cascade>
+            </one-to-many>
+        </attributes>
+    </entity>
+
+    <entity class="com.errday.splearn.domain.curriculum.Lesson">
+        <table name="lesson"/>
+        <attributes>
+            <basic name="title">
+                <column name="title" length="200"/>
+            </basic>
+            <many-to-one name="section" optional="false" fetch="LAZY"/>
+        </attributes>
+    </entity>
+
+    <embeddable class="com.errday.splearn.domain.member.Profile">
+        <attributes>
+            <basic name="address">
+                <column name="profile_address" length="20"/>
+            </basic>
+        </attributes>
+    </embeddable>
+
+    <embeddable class="com.errday.splearn.domain.shared.Email">
+        <attributes>
+            <basic name="address">
+                <column name="email_address" nullable="false" length="150"/>
+            </basic>
+        </attributes>
+    </embeddable>
 </entity-mappings>

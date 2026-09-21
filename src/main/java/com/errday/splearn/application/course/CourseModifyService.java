@@ -2,6 +2,7 @@ package com.errday.splearn.application.course;
 
 import com.errday.splearn.application.course.provided.*;
 import com.errday.splearn.application.course.required.CourseRepository;
+import com.errday.splearn.application.course.required.CurriculumCreator;
 import com.errday.splearn.application.instructor.provided.InstructorFinder;
 import com.errday.splearn.domain.course.Course;
 import com.errday.splearn.domain.instructor.Instructor;
@@ -16,6 +17,7 @@ public class CourseModifyService implements CourseCreator, CoursePublisher {
     private final CourseFinder courseFinder;
     private final CourseValidator courseValidator;
     private final InstructorFinder instructorFinder;
+    private final CurriculumCreator curriculumCreator;
 
     @Override
     public Course create(CourseCreateRequest request) throws ValidationException {
@@ -24,8 +26,11 @@ public class CourseModifyService implements CourseCreator, CoursePublisher {
         courseValidator.validateForCreate(instructor, request);
 
         Course course = new Course(instructor, request.title(), request.description());
+        course = courseRepository.save(course);
 
-        return courseRepository.save(course);
+        curriculumCreator.createCurriculum(course);
+
+        return course;
     }
 
     @Override

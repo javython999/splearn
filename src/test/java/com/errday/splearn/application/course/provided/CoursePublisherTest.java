@@ -4,6 +4,7 @@ import com.errday.splearn.domain.course.CourseStatus;
 import com.errday.splearn.support.stereotype.ApplicationServiceTest;
 import com.errday.splearn.support.test.BaseApplicationServiceTest;
 import lombok.RequiredArgsConstructor;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -16,26 +17,27 @@ public class CoursePublisherTest extends BaseApplicationServiceTest {
 
     @BeforeEach
     void setUp() {
-        prepareCourse();
+        prepareCourseWithCurriculum();
     }
 
     @Test
     void submitForReview() {
         var courseForReview = coursePublisher.submitForReview(course.getId());
 
-        assertThat(courseForReview.getStatus()).isEqualTo(CourseStatus.IN_REVIEW);
+        Assertions.assertThat(courseForReview.getStatus()).isEqualTo(CourseStatus.IN_REVIEW);
     }
 
     @Test
-    void submitForPublish() {
+    void publish() {
         coursePublisher.submitForReview(course.getId());
+
         var courseForPublish = coursePublisher.publish(course.getId());
 
         assertThat(courseForPublish.getStatus()).isEqualTo(CourseStatus.PUBLISHED);
     }
 
     @Test
-    void submitForArchive() {
+    void archive() {
         coursePublisher.submitForReview(course.getId());
         coursePublisher.publish(course.getId());
         var courseForArchive = coursePublisher.archive(course.getId());

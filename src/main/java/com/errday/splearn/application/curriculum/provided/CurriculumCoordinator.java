@@ -1,11 +1,11 @@
 package com.errday.splearn.application.curriculum.provided;
 
+import com.errday.splearn.application.course.required.CurriculumCreator;
+import com.errday.splearn.application.course.required.CurriculumValidator;
 import com.errday.splearn.domain.curriculum.Curriculum;
 import com.errday.splearn.domain.curriculum.InvalidCurriculumException;
 
-public interface CurriculumCoordinator {
-    Curriculum create(Long courseId);
-
+public interface CurriculumCoordinator extends CurriculumCreator, CurriculumValidator {
     Curriculum addSection(Long curriculumId, String title);
 
     Curriculum addSection(Long curriculumId, int sectionIndex, String title);
@@ -21,6 +21,4 @@ public interface CurriculumCoordinator {
     Curriculum removeSection(Long curriculumId, int sectionIndex);
 
     Curriculum moveLesson(Long curriculumId, int fromSectionIndex, int fromLessonIndex, int toSectionIndex, int toLessonIndex);
-
-    Curriculum validate(Long curriculumId) throws InvalidCurriculumException;
 }

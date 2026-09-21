@@ -1,7 +1,9 @@
 package com.errday.splearn.domain.curriculum;
 
 import com.errday.splearn.domain.AbstractEntity;
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,14 +19,12 @@ import java.util.Objects;
 @ToString(callSuper = true, exclude = {"curriculum", "lessons"})
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Section extends AbstractEntity {
-    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    @ManyToOne
     private Curriculum curriculum;
 
-    @Column(length = 200)
     private String title;
 
-    @OneToMany(mappedBy = "section", cascade = CascadeType.ALL)
-    @OrderColumn(name = "lesson_order")
+    @OneToMany
     @Getter(AccessLevel.NONE)
     private List<Lesson> lessons = new ArrayList<>();
 

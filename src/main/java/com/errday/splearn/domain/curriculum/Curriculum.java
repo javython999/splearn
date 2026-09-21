@@ -2,7 +2,9 @@ package com.errday.splearn.domain.curriculum;
 
 import com.errday.splearn.domain.AbstractEntity;
 import com.errday.splearn.domain.course.Course;
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -18,11 +20,10 @@ import static org.springframework.util.Assert.state;
 @ToString(callSuper = true, exclude = {"course", "sections"})
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Curriculum extends AbstractEntity {
-    @OneToOne(optional = false, fetch = FetchType.LAZY)
+    @OneToOne
     private Course course;
 
-    @OneToMany(mappedBy = "curriculum", cascade = CascadeType.ALL, orphanRemoval = true)
-    @OrderColumn(name = "section_order")
+    @OneToMany
     @Getter(AccessLevel.NONE)
     private List<Section> sections = new ArrayList<>();
 

@@ -3,7 +3,8 @@ package com.errday.splearn.domain.enrollment;
 import com.errday.splearn.domain.AbstractEntity;
 import com.errday.splearn.domain.course.Course;
 import com.errday.splearn.domain.member.Member;
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.ManyToOne;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -18,21 +19,17 @@ import static org.springframework.util.Assert.state;
 @Getter
 @ToString(callSuper = true, exclude = {"member", "course"})
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(uniqueConstraints = @UniqueConstraint(name = "UK_ENROLLMENT_MEMBER_COURSE", columnNames = {"member_id", "course_id"}))
 public class Enrollment extends AbstractEntity {
     @NaturalId
-    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    @ManyToOne
     private Member member;
 
     @NaturalId
-    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    @ManyToOne
     private Course course;
 
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false, length = 20)
     private EnrollmentStatus status;
 
-    @Column(nullable = false)
     private LocalDateTime enrolledAt;
 
     private LocalDateTime completedAt;

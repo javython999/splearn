@@ -1,5 +1,6 @@
 package com.errday.splearn.application.curriculum.provided;
 
+import com.errday.splearn.application.curriculum.required.CurriculumRepository;
 import com.errday.splearn.domain.curriculum.Curriculum;
 import com.errday.splearn.domain.curriculum.InvalidCurriculumException;
 import com.errday.splearn.domain.curriculum.SectionContent;
@@ -17,17 +18,18 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 @RequiredArgsConstructor
 class CurriculumCoordinatorTest extends BaseApplicationServiceTest {
     final CurriculumCoordinator curriculumCoordinator;
+    final CurriculumRepository curriculumRepository;
 
     @Test
     void create() {
-        Curriculum curriculum = curriculumCoordinator.create(prepareCourse().getId());
+        Curriculum curriculum = curriculumRepository.findByCourseId(prepareCourse().getId()).orElseThrow();
 
         assertThat(curriculum.getId()).isNotNull();
     }
 
     @Test
     void addSection() {
-        Curriculum curriculum = curriculumCoordinator.create(prepareCourse().getId());
+        Curriculum curriculum = curriculumRepository.findByCourseId(prepareCourse().getId()).orElseThrow();
 
         assertThat(SectionContent.from(curriculum)).isEmpty();
 
@@ -40,7 +42,7 @@ class CurriculumCoordinatorTest extends BaseApplicationServiceTest {
 
     @Test
     void addSectionWithSectionIndex() {
-        Curriculum curriculum = curriculumCoordinator.create(prepareCourse().getId());
+        Curriculum curriculum = curriculumRepository.findByCourseId(prepareCourse().getId()).orElseThrow();
         curriculumCoordinator.addSection(curriculum.getId(), "S0");
         curriculumCoordinator.addSection(curriculum.getId(), "S1");
 
@@ -60,7 +62,7 @@ class CurriculumCoordinatorTest extends BaseApplicationServiceTest {
 
     @Test
     void addLesson() {
-        Curriculum curriculum = curriculumCoordinator.create(prepareCourse().getId());
+        Curriculum curriculum = curriculumRepository.findByCourseId(prepareCourse().getId()).orElseThrow();
         curriculumCoordinator.addSection(curriculum.getId(), "S0");
         curriculumCoordinator.addSection(curriculum.getId(), "S1");
 
@@ -88,7 +90,7 @@ class CurriculumCoordinatorTest extends BaseApplicationServiceTest {
 
     @Test
     void updateSectionTitle() {
-        Curriculum curriculum = curriculumCoordinator.create(prepareCourse().getId());
+        Curriculum curriculum = curriculumRepository.findByCourseId(prepareCourse().getId()).orElseThrow();
         curriculumCoordinator.addSection(curriculum.getId(), "S0");
         curriculumCoordinator.addSection(curriculum.getId(), "S1");
 
@@ -107,7 +109,7 @@ class CurriculumCoordinatorTest extends BaseApplicationServiceTest {
 
     @Test
     void updateLessonTitle() {
-        Curriculum curriculum = curriculumCoordinator.create(prepareCourse().getId());
+        Curriculum curriculum = curriculumRepository.findByCourseId(prepareCourse().getId()).orElseThrow();
         curriculumCoordinator.addSection(curriculum.getId(), "S0");
         curriculumCoordinator.addLesson(curriculum.getId(), 0, "L0");
         curriculumCoordinator.addLesson(curriculum.getId(), 0, "L1");
@@ -129,7 +131,7 @@ class CurriculumCoordinatorTest extends BaseApplicationServiceTest {
 
     @Test
     void removeLesson() {
-        Curriculum curriculum = curriculumCoordinator.create(prepareCourse().getId());
+        Curriculum curriculum = curriculumRepository.findByCourseId(prepareCourse().getId()).orElseThrow();
         curriculumCoordinator.addSection(curriculum.getId(), "S0");
         curriculumCoordinator.addLesson(curriculum.getId(), 0, "L0");
         curriculumCoordinator.addLesson(curriculum.getId(), 0, "L1");
@@ -158,7 +160,7 @@ class CurriculumCoordinatorTest extends BaseApplicationServiceTest {
 
     @Test
     void removeSection() {
-        Curriculum curriculum = curriculumCoordinator.create(prepareCourse().getId());
+        Curriculum curriculum = curriculumRepository.findByCourseId(prepareCourse().getId()).orElseThrow();
         curriculumCoordinator.addSection(curriculum.getId(), "S0");
         curriculumCoordinator.addLesson(curriculum.getId(), 0, "L0");
         curriculumCoordinator.addLesson(curriculum.getId(), 0, "L1");
@@ -195,7 +197,7 @@ class CurriculumCoordinatorTest extends BaseApplicationServiceTest {
 
     @Test
     void moveLesson() {
-        Curriculum curriculum = curriculumCoordinator.create(prepareCourse().getId());
+        Curriculum curriculum = curriculumRepository.findByCourseId(prepareCourse().getId()).orElseThrow();
         curriculumCoordinator.addSection(curriculum.getId(), "S0");
         curriculumCoordinator.addLesson(curriculum.getId(), 0, "L0");
         curriculumCoordinator.addLesson(curriculum.getId(), 0, "L1");
@@ -221,7 +223,7 @@ class CurriculumCoordinatorTest extends BaseApplicationServiceTest {
 
     @Test
     void validate() {
-        Curriculum curriculum = curriculumCoordinator.create(prepareCourse().getId());
+        Curriculum curriculum = curriculumRepository.findByCourseId(prepareCourse().getId()).orElseThrow();
         curriculumCoordinator.addSection(curriculum.getId(), "S0");
         curriculumCoordinator.addLesson(curriculum.getId(), 0, "L0");
         curriculumCoordinator.addLesson(curriculum.getId(), 0, "L1");

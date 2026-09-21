@@ -1,5 +1,6 @@
 package com.errday.splearn.application.course.provided;
 
+import com.errday.splearn.application.curriculum.provided.CurriculumFinder;
 import com.errday.splearn.domain.course.Course;
 import com.errday.splearn.domain.course.CourseFixture;
 import com.errday.splearn.support.stereotype.ApplicationServiceTest;
@@ -13,6 +14,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @RequiredArgsConstructor
 class CourseCreatorTest extends BaseApplicationServiceTest {
     final CourseCreator courseCreator;
+    final CurriculumFinder curriculumFinder;
 
     @Test
     void create() {
@@ -20,7 +22,8 @@ class CourseCreatorTest extends BaseApplicationServiceTest {
 
         Course course = courseCreator.create(CourseFixture.createCoureCreateRequest(instructor.getId(), null));
 
-        assertThat(course).isNotNull();
+        assertThat(course.getId()).isNotNull();
+        assertThat(curriculumFinder.findByCourseId(course.getId())).isNotNull();
     }
 
     @Test

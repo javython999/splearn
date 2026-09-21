@@ -1,9 +1,7 @@
 package com.errday.splearn.domain.curriculum;
 
 import com.errday.splearn.domain.AbstractEntity;
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.ManyToOne;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,10 +14,9 @@ import java.util.Objects;
 @ToString(callSuper = true, exclude = {"section"})
 @NoArgsConstructor
 public class Lesson extends AbstractEntity {
-    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    @ManyToOne
     private Section section;
 
-    @Column(length = 200)
     private String title;
 
     public Lesson(Section section, String title) {

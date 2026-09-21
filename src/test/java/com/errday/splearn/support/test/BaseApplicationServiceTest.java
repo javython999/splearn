@@ -1,12 +1,14 @@
 package com.errday.splearn.support.test;
 
 import com.errday.splearn.application.course.provided.CourseCreator;
+import com.errday.splearn.application.curriculum.provided.CurriculumFinder;
 import com.errday.splearn.application.enrollment.provided.EnrollRequest;
 import com.errday.splearn.application.enrollment.provided.Enroller;
 import com.errday.splearn.application.instructor.provided.InstructorApplication;
 import com.errday.splearn.application.member.provided.MemberRegister;
 import com.errday.splearn.domain.course.Course;
 import com.errday.splearn.domain.course.CourseFixture;
+import com.errday.splearn.domain.curriculum.Curriculum;
 import com.errday.splearn.domain.enrollment.Enrollment;
 import com.errday.splearn.domain.instructor.Instructor;
 import com.errday.splearn.domain.instructor.InstructorFixture;
@@ -31,10 +33,15 @@ public class BaseApplicationServiceTest {
     @Autowired
     Enroller enroller;
 
+    @Autowired
+    CurriculumFinder curriculumFinder;
+
     protected Member member;
     protected Instructor instructor;
     protected Course course;
     protected Enrollment enrollment;
+    protected Curriculum curriculum;
+
 
     @NonNull
     protected Instructor prepareInstructor() {
@@ -77,5 +84,31 @@ public class BaseApplicationServiceTest {
 
         enrollment = enroller.enroll(new EnrollRequest(member.getId(), course.getId()));
         return enrollment;
+    }
+
+    protected Curriculum prepareCurriculumSectionsAndLessons(Course course) {
+        Curriculum curriculum = curriculumFinder.findByCourseId(course.getId());
+
+        curriculum.addSection("S0");
+        curriculum.addLesson(0, "L0");
+        curriculum.addLesson(0, "L1");
+
+        curriculum.addSection("S1");
+        curriculum.addLesson(1, "L2");
+        curriculum.addLesson(1, "L3");
+
+        curriculum.addSection("S2");
+        curriculum.addLesson(2, "L4");
+
+        this.curriculum = curriculum;
+
+        return this.curriculum;
+    }
+
+    protected Course prepareCourseWithCurriculum() {
+        prepareCourse();
+        prepareCurriculumSectionsAndLessons(course);
+
+        return this.course;
     }
 }
